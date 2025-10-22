@@ -1,0 +1,41 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f5f5f5;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Fullscreen styles */
+:-webkit-full-screen {
+  background-color: white;
+}
+
+:-moz-full-screen {
+  background-color: white;
+}
+
+:-ms-fullscreen {
+  background-color: white;
+}
+
+:fullscreen {
+  background-color: white;
+}

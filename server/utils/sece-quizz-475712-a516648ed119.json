@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "sece-quizz-475712",
+  "private_key_id": "a516648ed1197b9985a41a5652bc6cee199566af",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCi2VYfAaEqYy6h\nD/QEuBObfvKhRQR7c9tfemf62XnaHjKflY8X+2OY6yYXYcaIYpYgs0Zqe4/YmDEZ\nuklfJT+KcM0si/094Oy/jBnBViMI30l0sq6YnSExvMX+ulLPl5Ed0ZdVMt+9J4KP\nrqg77ZzEl9890QX+7O/aFIzkZkbEKkFP/EySC9KE64Q9pGZG71UESMS8bZy0eFz6\n04qKM9QOrJHGZXw6XTVf66xWSXsWfMnU0PsSiH2siGRLtGZOBgWbtQIV4Y2IWqUa\nzY5eU+OlNMIITmhmcEr2nAkqxzZUwmWB16N+I1y6O7gTidb0KVXfHdI1at13NwIC\nOh/nJ33nAgMBAAECggEACQ743OmsytxQhDIMe1S39n7VxUW/DZTwv3tiHFCLmCf0\n3e6mUomvzRpLeKJ+Nijxu+jtAlBUPJKerJUxrqK2SZ+jshYpZI9F7BPBfQErGru8\n7MphruiSp58eDmDT6Ws/bb6yYdFeI7n2Z8Kp5gd+IGtoRhqB8F/CqclZ2vybdB7k\nzoRut0MnPFjQ7J7ND4xDqMvZ5w52BQkkQDWLn7xo2PaokLKv6I75UNNc5o/A5gLW\n9dEsIDMdqYS7w2kPkK9Zqtvz7Ra99gTFZoLozqpNo0pHOg/9yKMLkqFYYYs63WCK\nM4mCFlFili54W471gEktBam8u1iDvlNs4iKtw126DQKBgQDeEYj7CLidygKD4M4y\n3dhZWvAUwSBMV5G20AVB5osSax90wixrSK5rR55Mk5NGB1ZnMLoLQeikbrhf5mEW\n+NwwuYInkdwETjixQ2Qy5NE5nUnR/pxsiyrRS95+ooQ3MwWfwNEsdotjjItEyA0U\n5UY/PYirGbB4TVXxFHRDNes1CwKBgQC7u1yDu4tHlcsaLJzHxLVtj1Pu8YzuXbt6\nAc8+VO+tJHs0TkGFSYpsJl6ZGnr5+4p0tmicXPv92oYWSu8ISMZeybegVSK13vdV\nHcn2au5mpRV9746IHnzC99EHAuY82czQJEWEWWfyd6pxiYrwY3V7n70VDhZhu9yy\nlETDX6LsFQKBgG1By1dXLx3S6fHghRLZuzwbVcugSTfGTdbX+f42Y24obk2PyzLt\ni4MUtXmPkgH+UjBq9N3dC4z7PJNSUapvvkXqv3KgfNNReOsd8QppMdda35sF3gg5\nYFOhNFKxusM9wyKaR0/M8z+DQnIQyv7g3vL2X2tvNDe8NPBr09fNi2+JAoGBAIfa\nRE7ILzh0e+/LDQG7phdMu06U2om8pujZ2mGfEXrYhZgKcXvFBjjRY2+kLA4vK7je\nL8HHwEuqEZKcU3JJR9RcYVfThDTcz1t3HSoHo9H/8Rebfiee+GYW89sBDCBI9OBC\n/1ORZ5mdY2iaQkNHlkMKC8jq0uOTEVjh1wkTclEpAoGAbvUjKgFNI5831p3h27gs\nb4oANhV8Icvk5cQjAYuvu/pU50zldHgGMxpDsN6qr8hGOdDSXtH+VOtZv1e8VeTJ\n0NdphIOczc3L9QKkxXBb9KObx/8CRTeTQKHNiETQEVCFCKKAOmtOioxgmCpScli2\nh4YH90qGen9JKdmXVjJL7Pw=\n-----END PRIVATE KEY-----\n",
+  "client_email": "tamilselvan@sece-quizz-475712.iam.gserviceaccount.com",
+  "client_id": "103840159326028365633",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/tamilselvan%40sece-quizz-475712.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
