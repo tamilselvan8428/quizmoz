@@ -167,7 +167,7 @@ const AIGenerateQuiz = () => {
       if (response.data.success) {
         setSuccess('Quiz saved successfully! Redirecting...');
         setTimeout(() => {
-          navigate('/quizzes');
+          navigate('/staff'); 
         }, 2000);
       }
     } catch (err) {
