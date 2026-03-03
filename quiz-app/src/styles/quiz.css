@@ -91,7 +91,7 @@ body {
 }
 
 /* ===============================
-   OPTIONS
+   OPTIONS  (FIXED ALIGNMENT)
 ================================ */
 .options-list {
   list-style: none;
@@ -100,12 +100,13 @@ body {
 }
 
 .option {
-  margin-bottom: 12px;
-  padding: 12px 15px;
+  margin-bottom: 14px;
+  padding: 14px 18px;
   background: rgba(255,255,255,0.25);
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
+  gap: 15px;
   transition: 0.3s ease;
   cursor: pointer;
 }
@@ -120,13 +121,20 @@ body {
   border-left: 4px solid #57C785;
 }
 
+/* 🔥 Proper radio alignment */
 .option input[type="radio"] {
-  margin-right: 15px;
-  transform: scale(1.2);
+  margin: 0;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  cursor: pointer;
 }
 
 .option label {
-  flex-grow: 1;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  line-height: 1.5;
   cursor: pointer;
 }
 
