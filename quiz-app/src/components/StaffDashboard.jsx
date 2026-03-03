@@ -47,7 +47,7 @@ const StaffDashboard = ({ user, logout, updateUser }) => {
       }
 
       const baseURL = process.env.NODE_ENV === 'development' 
-        ? 'http://localhost:5050' 
+        ? 'http://localhost:5000' 
         : '';
         
       const response = await axios.get(`${baseURL}/api/quizzes`, {

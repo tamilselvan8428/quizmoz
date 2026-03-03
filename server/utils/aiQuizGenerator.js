@@ -6,11 +6,11 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const pdfParse = require('pdf-parse');
 const mammoth = require('mammoth');
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
 (async () => {
   try {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-preview-09-2025" });
+    const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     const result = await model.generateContent("Say 'Hello from Gemini!'");
     console.log((await result.response).text());
   } catch (err) {
@@ -90,7 +90,7 @@ async function extractTextFromFile(buffer, fileType) {
 
 // ========== AI Subtopic & Content Flow ==========
 async function generateSubtopicsAI(topic, numSubtopics = 5) {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-preview-09-2025" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `
 List ${numSubtopics} focused subtopics under "${topic}".
@@ -102,7 +102,7 @@ Use short, specific phrases (no numbering, one per line).
 }
 
 async function generateSubtopicContentAI(topic, subtopic) {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-preview-09-2025" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
   const prompt = `
 Explain "${subtopic}" under the topic "${topic}" in 120–160 words.
 Include what it is, how it works, and one example.
@@ -112,7 +112,7 @@ Include what it is, how it works, and one example.
 }
 
 async function generateQuizFromContentAI(topic, subtopic, content, numQuestions = 2) {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-preview-09-2025" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
   const prompt = `
 From the content below about "${subtopic}" (in "${topic}"), create ${numQuestions} MCQs.
 
@@ -219,7 +219,7 @@ async function generateQuizFromText(text, options = {}) {
 
 // ========== Simple Gemini Quiz ==========
 async function generateQuizWithGemini(topic, numQuestions = 10) {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-preview-09-2025" });
+  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
   const prompt = `
 Create ${numQuestions} multiple-choice questions about "${topic}".

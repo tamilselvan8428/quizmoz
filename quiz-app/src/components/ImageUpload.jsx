@@ -9,7 +9,7 @@ const ImageUpload = ({ onUploadSuccess, questionIndex }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5050';
+  const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
   // Clean up object URLs to avoid memory leaks
   useEffect(() => {

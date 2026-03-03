@@ -1,16 +1,42 @@
-.student-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 1rem;
+/* ===============================
+   GLOBAL BACKGROUND
+================================ */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(
+    90deg,
+    rgba(42,123,155,1) 0%,
+    rgba(87,199,133,1) 50%,
+    rgba(237,221,83,1) 100%
+  );
+  color: white;
 }
 
+/* ===============================
+   MAIN CONTAINER
+================================ */
+.student-container {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 1.5rem;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(15px);
+  border-radius: 16px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+/* ===============================
+   HEADER
+================================ */
 .student-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
 }
 
 .user-info {
@@ -25,64 +51,109 @@
   align-items: center;
 }
 
+/* ===============================
+   BUTTONS
+================================ */
 .edit-profile-button {
-  background-color: #4a90e2;
+  background-color: #57C785;
   color: white;
   border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
+  padding: 8px 18px;
+  border-radius: 25px;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: background-color 0.2s;
+  transition: 0.3s ease;
 }
 
 .edit-profile-button:hover {
-  background-color: #3a7bc8;
+  background-color: #2A7B9B;
+  transform: translateY(-2px);
 }
 
 .user-info button {
-  padding: 0.5rem 1rem;
-  background-color: #f44336;
+  padding: 0.5rem 1.2rem;
+  background-color: #ef4444;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 25px;
   cursor: pointer;
+  transition: 0.3s ease;
 }
 
 .user-info button:hover {
-  background-color: #d32f2f;
+  background-color: #dc2626;
+  transform: translateY(-2px);
 }
 
-.quizzes-section, .results-section {
+button {
+  padding: 0.5rem 1.2rem;
+  background-color: #2A7B9B;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  background-color: #57C785;
+  transform: translateY(-2px);
+}
+
+/* ===============================
+   SECTIONS
+================================ */
+.quizzes-section,
+.results-section {
   margin-bottom: 2rem;
 }
 
+/* ===============================
+   TABLE (GLASS STYLE)
+================================ */
 table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 1rem;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 th, td {
-  padding: 0.75rem;
+  padding: 0.85rem;
   text-align: left;
-  border-bottom: 1px solid #ddd;
 }
 
 th {
-  background-color: #f5f5f5;
+  background: rgba(255,255,255,0.25);
   font-weight: 600;
 }
 
-button {
-  padding: 0.5rem 1rem;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+td {
+  border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
-button:hover {
-  background-color: #45a049;
+tr:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+  .student-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .header-buttons {
+    flex-wrap: wrap;
+  }
+
+  table {
+    font-size: 0.9rem;
+  }
 }

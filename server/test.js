@@ -1,11 +1,11 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-const genAI = new GoogleGenerativeAI('AIzaSyCErpXKlHiPzrOMmt-nZb0tzA-JjcOI-R4');
+const genAI = new GoogleGenerativeAI('AIzaSyDj4wI-aA4R1gf1IQp7AdCIAhwGkG77krI');
 
 (async () => {
   try {
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash-preview-09-2025"
+      model: "gemini-2.5-flash"
     });
 
     const result = await model.generateContent("Say 'Hello from Gemini 2.5 Flash Preview!'");

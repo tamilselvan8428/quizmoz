@@ -1770,4 +1770,94 @@ app.post('/api/users/staff', authenticate, authorize(['admin']), async (req, res
             error: err.message 
         });
     }
+});// PUT endpoint to edit quiz
+app.put('/api/quizzes/:quizId', authenticate, authorize(['staff', 'admin']), async (req, res) => {
+  try {
+    const { title, description, questions, startTime, endTime, duration, department, batch } = req.body;
+    const quizId = req.params.quizId;
+    
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({ success: false, message: 'Quiz not found' });
+    }
+    
+    // Check permissions
+    if (req.user.role !== 'admin' && quiz.createdBy.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: 'Not authorized to edit this quiz' });
+    }
+    
+    // Update fields
+    if (title) quiz.title = title;
+    if (description) quiz.description = description;
+    if (questions) {
+      let parsedQuestions = typeof questions === 'string' ? JSON.parse(questions) : questions;
+      quiz.questions = parsedQuestions;
+    }
+    if (startTime) quiz.startTime = new Date(startTime);
+    if (endTime) quiz.endTime = new Date(endTime);
+    if (duration) quiz.duration = Number(duration);
+    if (department) quiz.department = department;
+    if (batch) quiz.batch = batch;
+    
+    await quiz.save();
+    
+    res.json({ success: true, message: 'Quiz updated successfully', quiz });
+  } catch (err) {
+    console.error('Error updating quiz:', err);
+    res.status(500).json({ success: false, message: 'Failed to update quiz', error: err.message });
+  }
+});
+
+// PUT endpoint to publish/unpublish quiz
+app.put('/api/quizzes/:quizId/publish', authenticate, authorize(['staff', 'admin']), async (req, res) => {
+  try {
+    const { status } = req.body; // 'published' or 'draft'
+    const quizId = req.params.quizId;
+    
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({ success: false, message: 'Quiz not found' });
+    }
+    
+    // Check permissions
+    if (req.user.role !== 'admin' && quiz.createdBy.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: 'Not authorized to publish this quiz' });
+    }
+    
+    quiz.status = status || 'published';
+    quiz.isVisible = status === 'published';
+    
+    await quiz.save();
+    
+    res.json({ success: true, message: `Quiz ${status === 'published' ? 'published' : 'unpublished'} successfully`, quiz });
+  } catch (err) {
+    console.error('Error publishing quiz:', err);
+    res.status(500).json({ success: false, message: 'Failed to publish quiz', error: err.message });
+  }
+});
+
+// GET endpoint for students to see only published quizzes
+app.get('/api/quizzes/published', authenticate, authorize(['student']), async (req, res) => {
+  try {
+    const now = new Date();
+    
+    const quizzes = await Quiz.find({
+      status: 'published',
+      isVisible: true,
+      startTime: { $lte: now },
+      endTime: { $gte: now }
+    }).populate('createdBy', 'name');
+
+    res.json({ 
+      success: true,
+      quizzes 
+    });
+  } catch (err) {
+    console.error('Error fetching published quizzes:', err);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Failed to fetch published quizzes',
+      error: err.message 
+    });
+  }
 });
