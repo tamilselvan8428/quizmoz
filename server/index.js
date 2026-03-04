@@ -1015,9 +1015,7 @@ try {
     
     const quizzes = await Quiz.find({
     status: 'published',
-    isVisible: true,
-    startTime: { $lte: now },
-    endTime: { $gte: now }
+    isVisible: true
     }).populate('createdBy', 'name');
 
     const results = await QuizResult.find({ user: req.user._id });
