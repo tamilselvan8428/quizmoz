@@ -1714,11 +1714,27 @@ app.use((req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'OK' });
+});
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(`Access the API at http://localhost:${PORT}`);
 });
 // Add this route with the other user management routes
+app.post('/api/ai/generate-quiz', async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      message: "AI quiz route working"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error generating quiz"
+    });
+  }
+});
 app.post('/api/users/staff', authenticate, authorize(['admin']), async (req, res) => {
     try {
         const { name, rollNumber, password, department } = req.body;

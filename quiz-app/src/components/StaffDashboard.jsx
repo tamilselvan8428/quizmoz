@@ -47,7 +47,7 @@ const StaffDashboard = ({ user, logout, updateUser }) => {
       }
 
       const baseURL = process.env.NODE_ENV === 'development' 
-        ? 'http://localhost:5000' 
+        ? 'https://quizmoz.onrender.com' 
         : '';
         
       const response = await axios.get(`${baseURL}/api/quizzes`, {

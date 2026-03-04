@@ -22,7 +22,7 @@ const AIGenerateQuiz = () => {
   const navigate = useNavigate();
   
   // Use environment variable with fallback
-  const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+  const baseURL = import.meta.env.VITE_API_BASE_URL || 'https://quizmoz-production.onrender.com';
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

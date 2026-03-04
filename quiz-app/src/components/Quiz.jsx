@@ -23,7 +23,7 @@ const Quiz = () => {
   const [imageLoadError, setImageLoadError] = useState({});
   const [imageUrls, setImageUrls] = useState({});
   
-  const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+  const baseURL = 'https://quizmoz.onrender.com';
 
   const handleVisibilityChange = () => {
     console.debug('[Quiz] visibilitychange fired. hidden=', document.hidden, 'state=', document.visibilityState);
