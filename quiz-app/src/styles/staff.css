@@ -107,6 +107,131 @@ header {
   box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
+/* ================= QUIZ TABLE BUTTONS ================= */
+
+.edit-btn {
+  background: #3498db;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 5px;
+  transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+  background: #2980b9;
+  transform: scale(1.05);
+}
+
+.publish-btn {
+  background: #27ae60;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 5px;
+  transition: all 0.3s ease;
+}
+
+.publish-btn:hover {
+  background: #229954;
+  transform: scale(1.05);
+}
+
+.unpublish-btn {
+  background: #f39c12;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 5px;
+  transition: all 0.3s ease;
+}
+
+.unpublish-btn:hover {
+  background: #e67e22;
+  transform: scale(1.05);
+}
+
+.view-results-btn {
+  background: #8e44ad;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 5px;
+  transition: all 0.3s ease;
+}
+
+.view-results-btn:hover {
+  background: #7d3c98;
+  transform: scale(1.05);
+}
+
+.export-btn {
+  background: #16a085;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 5px;
+  transition: all 0.3s ease;
+}
+
+.export-btn:hover {
+  background: #138d75;
+  transform: scale(1.05);
+}
+
+.delete-btn {
+  background: #c0392b;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 5px;
+  transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+  background: #a93226;
+  transform: scale(1.05);
+}
+
+/* ================= STATUS BADGES ================= */
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.published {
+  background: #27ae60;
+  color: white;
+}
+
+.status-badge.draft {
+  background: #95a5a6;
+  color: white;
+}
+
 /* ================= QUIZ SECTION ================= */
 
 .quiz-management {

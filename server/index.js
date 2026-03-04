@@ -39,6 +39,32 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Database Connection with enhanced logging
+
+// Function to update existing quizzes with missing fields
+async function updateQuizFields() {
+  try {
+    console.log('Updating quiz fields...');
+    
+    // Update existing quizzes to add missing fields
+    const result = await mongoose.connection.db.collection('quizzes').updateMany(
+      {},
+      {
+        $set: {
+          status: 'draft',
+          isVisible: false
+        }
+      },
+      { upsert: false }
+    );
+    
+    if (result.modifiedCount > 0) {
+      console.log(`Updated ${result.modifiedCount} quizzes with status and isVisible fields`);
+    }
+  } catch (error) {
+    console.error('Error updating quiz fields:', error);
+  }
+}
+
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -48,6 +74,7 @@ mongoose.connect(process.env.MONGODB_URI, {
     console.log('Connected to MongoDB');
     await rebuildIndexes();
     await createDefaultAdmin();
+    await updateQuizFields();
 })
 .catch(err => {
     console.error('MongoDB connection error:', err);
@@ -177,6 +204,8 @@ duration: Number,
 createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 department: String,
 batch: String,
+status: { type: String, default: 'draft', enum: ['draft', 'published'] },
+isVisible: { type: Boolean, default: false },
 createdAt: { type: Date, default: Date.now }
 });
 
@@ -985,6 +1014,8 @@ try {
     const now = new Date();
     
     const quizzes = await Quiz.find({
+    status: 'published',
+    isVisible: true,
     startTime: { $lte: now },
     endTime: { $gte: now }
     }).populate('createdBy', 'name');

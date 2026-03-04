@@ -32,6 +32,8 @@ const StaffDashboard = ({ user, logout, updateUser }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [showEditProfile, setShowEditProfile] = useState(false);
+  const [editingQuiz, setEditingQuiz] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
     fetchQuizzes();
@@ -172,19 +174,46 @@ const StaffDashboard = ({ user, logout, updateUser }) => {
     });
 
     try {
-        const response = await axios.post('/api/quizzes', formData, {
+        let response;
+        
+        if (isEditMode && editingQuiz) {
+          // Update existing quiz
+          response = await axios.put(`/api/quizzes/${editingQuiz._id}`, {
+            title: quizTitle,
+            description: quizDescription,
+            questions: questions.map(q => ({
+              questionText: q.questionText,
+              options: q.options,
+              correctAnswer: q.correctAnswer,
+              points: q.points
+            })),
+            startTime,
+            endTime,
+            duration,
+            department,
+            batch
+          }, {
             headers: { 
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'multipart/form-data'
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'application/json'
             }
-        });
+          });
+        } else {
+          // Create new quiz
+          response = await axios.post('/api/quizzes', formData, {
+            headers: { 
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+        }
         
         setShowQuizForm(false);
         resetForm();
         fetchQuizzes();
     } catch (err) {
         console.error('Error:', err);
-        setError(err.response?.data?.message || err.message || 'Failed to create quiz');
+        setError(err.response?.data?.message || err.message || `Failed to ${isEditMode ? 'update' : 'create'} quiz`);
     } finally {
         setIsLoading(false);
     }
@@ -207,6 +236,8 @@ const StaffDashboard = ({ user, logout, updateUser }) => {
     setDepartment('');
     setBatch('');
     setError('');
+    setIsEditMode(false);
+    setEditingQuiz(null);
   };
 
   const exportResults = async (quizId) => {
@@ -246,6 +277,69 @@ const StaffDashboard = ({ user, logout, updateUser }) => {
     } catch (err) {
       console.error('Error deleting quiz:', err);
       setError(err.response?.data?.message || err.message || 'Failed to delete quiz');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const editQuiz = (quiz) => {
+    setEditingQuiz(quiz);
+    setIsEditMode(true);
+    setQuizTitle(quiz.title);
+    setQuizDescription(quiz.description || '');
+    setQuestions(quiz.questions.map(q => ({
+      questionText: q.questionText,
+      options: q.options,
+      correctAnswer: q.correctAnswer,
+      points: q.points,
+      image: null,
+      imagePreview: ''
+    })));
+    setStartTime(new Date(quiz.startTime).toISOString().slice(0, 16));
+    setEndTime(new Date(quiz.endTime).toISOString().slice(0, 16));
+    setDuration(quiz.duration);
+    setDepartment(quiz.department || '');
+    setBatch(quiz.batch || '');
+    setShowQuizForm(true);
+  };
+
+  const publishQuiz = async (quizId) => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const response = await axios.put(`/api/quizzes/${quizId}/publish`, 
+        { status: 'published' },
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+      );
+      
+      if (response.data.success) {
+        fetchQuizzes();
+        alert('Quiz published successfully! Students can now attend this quiz.');
+      }
+    } catch (err) {
+      console.error('Error publishing quiz:', err);
+      setError(err.response?.data?.message || err.message || 'Failed to publish quiz');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const unpublishQuiz = async (quizId) => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const response = await axios.put(`/api/quizzes/${quizId}/publish`, 
+        { status: 'draft' },
+        { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+      );
+      
+      if (response.data.success) {
+        fetchQuizzes();
+        alert('Quiz unpublished. Students can no longer attend this quiz.');
+      }
+    } catch (err) {
+      console.error('Error unpublishing quiz:', err);
+      setError(err.response?.data?.message || err.message || 'Failed to unpublish quiz');
     } finally {
       setIsLoading(false);
     }
@@ -342,6 +436,7 @@ const StaffDashboard = ({ user, logout, updateUser }) => {
                 <thead>
                   <tr>
                     <th>Title</th>
+                    <th>Status</th>
                     <th>Start Time</th>
                     <th>End Time</th>
                     <th>Duration</th>
@@ -354,6 +449,11 @@ const StaffDashboard = ({ user, logout, updateUser }) => {
                   {quizzes.map(quiz => (
                     <tr key={quiz._id}>
                       <td>{quiz.title}</td>
+                      <td>
+                        <span className={`status-badge ${quiz.status === 'published' ? 'published' : 'draft'}`}>
+                          {quiz.status === 'published' ? 'Published' : 'Draft'}
+                        </span>
+                      </td>
                       <td>{new Date(quiz.startTime).toLocaleString()}</td>
                       <td>{new Date(quiz.endTime).toLocaleString()}</td>
                       <td>{quiz.duration} mins</td>
@@ -366,6 +466,27 @@ const StaffDashboard = ({ user, logout, updateUser }) => {
                         >
                           View Results
                         </button>
+                        <button 
+                          onClick={() => editQuiz(quiz)}
+                          className="edit-btn"
+                        >
+                          Edit
+                        </button>
+                        {quiz.status === 'published' ? (
+                          <button 
+                            onClick={() => unpublishQuiz(quiz._id)}
+                            className="unpublish-btn"
+                          >
+                            Unpublish
+                          </button>
+                        ) : (
+                          <button 
+                            onClick={() => publishQuiz(quiz._id)}
+                            className="publish-btn"
+                          >
+                            Publish
+                          </button>
+                        )}
                         <button 
                           onClick={() => exportResults(quiz._id)}
                           className="export-btn"
@@ -407,7 +528,7 @@ const StaffDashboard = ({ user, logout, updateUser }) => {
               className="quiz-form"
               onClick={(e) => e.stopPropagation()}
             >
-              <h2>Create New Quiz</h2>
+              <h2>{isEditMode ? 'Edit Quiz' : 'Create New Quiz'}</h2>
               
               <form onSubmit={handleSubmitQuiz}>
                 <div className="form-group">
