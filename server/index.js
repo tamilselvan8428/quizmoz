@@ -122,6 +122,17 @@ app.use('/api/quizzes', quizRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/results', resultRoutes);
 
+// Direct routes for backward compatibility
+app.post('/api/login', (req, res) => {
+    const { login } = require('./controllers/userController');
+    return login(req, res);
+});
+
+app.post('/api/register', (req, res) => {
+    const { register } = require('./controllers/userController');
+    return register(req, res);
+});
+
 // Image upload route
 app.post('/api/images', upload.single('image'), (req, res) => {
     try {
