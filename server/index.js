@@ -20,6 +20,7 @@ const authRoutes = require('./routes/auth');
 const quizRoutes = require('./routes/quizzes');
 const userRoutes = require('./routes/users');
 const resultRoutes = require('./routes/results');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 
@@ -121,6 +122,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/quizzes', quizRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/results', resultRoutes);
+app.use('/api', adminRoutes); // Admin routes for backward compatibility
 
 // Direct routes for backward compatibility
 app.post('/api/login', (req, res) => {

@@ -9,6 +9,8 @@ const UserSchema = new mongoose.Schema({
     department: { type: String },
     batch: { type: String },
     isApproved: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },
+    deletedAt: { type: Date },
     createdAt: { type: Date, default: Date.now }
 });
 
