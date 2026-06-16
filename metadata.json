@@ -1,0 +1,5 @@
+{
+  "name": "Quizmoz",
+  "description": "A comprehensive quiz platform with Admin, Staff, and Student roles, featuring AI-powered quiz generation and learning.",
+  "requestFramePermissions": ["fullscreen"]
+}
