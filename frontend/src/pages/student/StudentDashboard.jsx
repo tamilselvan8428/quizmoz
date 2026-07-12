@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../lib/api.js';
-import { ClipboardList, Award, Clock, ChevronRight, CheckCircle2, XCircle, ChevronDown, ChevronUp, AlertCircle, Sparkles, Loader2 } from 'lucide-react';
+import { ClipboardList, Award, Clock, ChevronRight, CheckCircle2, XCircle, ChevronDown, ChevronUp, AlertCircle, Sparkles, Loader2, X } from 'lucide-react';
 import { aiService } from '../../lib/gemini.js';
 import Markdown from 'react-markdown';
 
@@ -275,9 +275,24 @@ export default function StudentDashboard() {
                       {/* AI Analysis Report display box */}
                       {aiAnalysis[result._id] && (
                         <div className="w-full bg-slate-50/50 rounded-2xl border border-slate-200/80 p-6 space-y-4 animate-fade-in-up mt-2">
-                          <div className="flex items-center gap-2.5 border-b border-slate-200/50 pb-3">
-                            <Sparkles className="w-5 h-5 text-indigo-600 animate-pulse" />
-                            <h4 className="font-extrabold text-gray-900 text-base">AI Performance Analysis & Study Guide</h4>
+                          <div className="flex items-center justify-between border-b border-slate-200/50 pb-3">
+                            <div className="flex items-center gap-2.5">
+                              <Sparkles className="w-5 h-5 text-indigo-600 animate-pulse" />
+                              <h4 className="font-extrabold text-gray-900 text-base">AI Performance Analysis & Study Guide</h4>
+                            </div>
+                            <button
+                              onClick={() => {
+                                setAiAnalysis(prev => {
+                                  const updated = { ...prev };
+                                  delete updated[result._id];
+                                  return updated;
+                                });
+                              }}
+                              className="p-1 hover:bg-slate-200 rounded text-slate-400 hover:text-slate-600 transition-colors"
+                              title="Close Analysis"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
                           </div>
                           <div className="prose prose-sm max-w-none text-gray-800 leading-relaxed max-h-[350px] overflow-y-auto pr-1">
                             <Markdown>{aiAnalysis[result._id]}</Markdown>

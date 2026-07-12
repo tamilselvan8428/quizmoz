@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../../lib/api.js';
-import { Clock, AlertTriangle, CheckCircle2, Maximize, Award, XCircle, AlertCircle, Sparkles, Loader2 } from 'lucide-react';
+import { Clock, AlertTriangle, CheckCircle2, Maximize, Award, XCircle, AlertCircle, Sparkles, Loader2, X } from 'lucide-react';
 import { aiService } from '../../lib/gemini.js';
 import Markdown from 'react-markdown';
 
@@ -321,14 +321,23 @@ export default function QuizPlayer({ user }) {
           {/* AI Analysis Card */}
           {aiAnalysis && (
             <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 space-y-6 animate-fade-in-up">
-              <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
-                <div className="p-2.5 bg-yellow-50 rounded-xl text-yellow-600">
-                  <Sparkles className="w-6 h-6 animate-pulse" />
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2.5 bg-yellow-50 rounded-xl text-yellow-600">
+                    <Sparkles className="w-6 h-6 animate-pulse" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">AI Performance Analysis & Study Guide</h2>
+                    <p className="text-sm text-slate-500">Based on your answers. This guide has been automatically saved to your Learning Hub.</p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900">AI Performance Analysis & Study Guide</h2>
-                  <p className="text-sm text-slate-500">Based on your answers. This guide has been automatically saved to your Learning Hub.</p>
-                </div>
+                <button
+                  onClick={() => setAiAnalysis('')}
+                  className="p-1.5 hover:bg-slate-100 rounded-lg text-slate-400 hover:text-slate-600 transition-colors"
+                  title="Close Analysis"
+                >
+                  <X className="w-5 h-5" />
+                </button>
               </div>
               
               <div className="prose prose-sm max-w-none text-gray-800 leading-relaxed max-h-[500px] overflow-y-auto pr-2">
