@@ -13,6 +13,7 @@ export default function StaffDashboard() {
   const [studentBatchFilter, setStudentBatchFilter] = useState('');
   const [studentSecFilter, setStudentSecFilter] = useState('');
   const [activeTab, setActiveTab] = useState('quizzes');
+  const [selectedStudentForDetails, setSelectedStudentForDetails] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [showScoreUpdate, setShowScoreUpdate] = useState(false);
@@ -519,23 +520,41 @@ export default function StaffDashboard() {
                     <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Roll No</th>
                     <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Department</th>
                     <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Batch/Sec</th>
+                    <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider text-right">Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-850">
                   {filtered.length === 0 ? (
                     <tr>
-                      <td colSpan="4" className="px-6 py-8 text-center text-slate-450 font-medium">
+                      <td colSpan="5" className="px-6 py-8 text-center text-slate-450 font-medium">
                         No students found matching the selected filters.
                       </td>
                     </tr>
                   ) : (
                     filtered.map(student => (
-                      <tr key={student._id} className="hover:bg-slate-850/40 transition-colors">
-                        <td className="px-6 py-4 whitespace-nowrap font-semibold text-white">{student.name}</td>
+                      <tr 
+                        key={student._id} 
+                        onClick={() => setSelectedStudentForDetails(student)}
+                        className="hover:bg-slate-850/60 transition-colors cursor-pointer group"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap font-semibold text-white group-hover:text-indigo-400 transition-colors">
+                          {student.name}
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap text-slate-350">{student.rollNo}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-slate-350">{student.department}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-slate-350">
                           {student.batch} {student.section && `- ${student.section}`}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedStudentForDetails(student);
+                            }}
+                            className="bg-indigo-950/60 hover:bg-[#7c3aed] text-indigo-400 hover:text-white px-3 py-1.5 rounded-xl border border-indigo-900/40 hover:border-transparent transition-all font-bold text-xs"
+                          >
+                            View Performance
+                          </button>
                         </td>
                       </tr>
                     ))
@@ -1123,6 +1142,266 @@ export default function StaffDashboard() {
           </div>
         </div>
       )}
+
+      {/* Student Details & Analytics Modal */}
+      {selectedStudentForDetails && (() => {
+        const student = selectedStudentForDetails;
+        const studentResults = results.filter(r => r.studentId === student._id);
+        const totalQuizzes = studentResults.length;
+        
+        // Calculate average score percentage
+        const avgPercentage = totalQuizzes > 0
+          ? Math.round(studentResults.reduce((acc, curr) => acc + (curr.score / curr.totalQuestions), 0) / totalQuizzes * 100)
+          : 0;
+
+        const totalViolations = studentResults.filter(r => r.exitedDueToTabSwitch).length;
+
+        // Prepare data for the SVG graph (sort by submission date ascending)
+        const sortedResults = [...studentResults].sort((a, b) => new Date(a.submittedAt) - new Date(b.submittedAt));
+        
+        return (
+          <div className="fixed inset-0 bg-black/65 backdrop-blur-sm flex items-center justify-center z-[100] p-4 overflow-y-auto animate-fade-in">
+            <div className="bg-slate-900 border border-slate-800 text-white rounded-3xl shadow-2xl max-w-4xl w-full p-8 max-h-[90vh] flex flex-col animate-scale-in relative text-left overflow-hidden">
+              {/* Close button */}
+              <button
+                onClick={() => setSelectedStudentForDetails(null)}
+                className="absolute top-6 right-6 p-1.5 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors z-10"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              <div className="border-b border-slate-850 pb-4 shrink-0">
+                <h2 className="text-2xl font-black text-white">{student.name}</h2>
+                <p className="text-xs text-slate-500 font-mono mt-0.5">{student.rollNo} • {student.department} • Section {student.section || 'N/A'} • Batch {student.batch || 'N/A'}</p>
+              </div>
+
+              <div className="flex-1 overflow-y-auto pr-1 space-y-8 scrollbar-thin mt-6">
+                {/* Key Metrics Row */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="bg-slate-950 p-5 rounded-2xl border border-slate-850 text-center">
+                    <p className="text-3xl font-black text-white">{totalQuizzes}</p>
+                    <p className="text-xs font-bold text-slate-450 uppercase tracking-wide mt-1">Quizzes Attended</p>
+                  </div>
+                  <div className="bg-slate-950 p-5 rounded-2xl border border-slate-850 text-center">
+                    <p className={`text-3xl font-black ${avgPercentage >= 50 ? 'text-emerald-400' : 'text-red-400'}`}>{avgPercentage}%</p>
+                    <p className="text-xs font-bold text-slate-450 uppercase tracking-wide mt-1">Average Score</p>
+                  </div>
+                  <div className="bg-slate-950 p-5 rounded-2xl border border-slate-850 text-center">
+                    <p className={`text-3xl font-black ${totalViolations > 0 ? 'text-red-400' : 'text-slate-400'}`}>{totalViolations}</p>
+                    <p className="text-xs font-bold text-slate-450 uppercase tracking-wide mt-1">Tab Terminations</p>
+                  </div>
+                </div>
+
+                {/* Graph Section */}
+                <div>
+                  <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
+                    <span className="w-1.5 h-4 bg-[#7c3aed] rounded-full inline-block" />
+                    Quiz Performance Trend
+                  </h3>
+                  {totalQuizzes === 0 ? (
+                    <div className="py-12 text-center bg-slate-950 rounded-2xl border border-slate-850 text-slate-500 text-sm font-semibold">
+                      No quiz data available to display trend.
+                    </div>
+                  ) : (
+                    <div className="bg-slate-950 p-6 rounded-2xl border border-slate-850 relative">
+                      {/* Render custom SVG graph */}
+                      {(() => {
+                        const width = 600;
+                        const height = 200;
+                        const paddingX = 45;
+                        const paddingY = 30;
+                        const chartWidth = width - (paddingX * 2);
+                        const chartHeight = height - (paddingY * 2);
+
+                        // Generate points
+                        const points = sortedResults.map((r, index) => {
+                          const x = paddingX + (sortedResults.length > 1
+                            ? (index / (sortedResults.length - 1)) * chartWidth
+                            : chartWidth / 2);
+                          const percentage = r.score / r.totalQuestions;
+                          const y = height - paddingY - (percentage * chartHeight);
+                          return { x, y, r };
+                        });
+
+                        // Construct SVG path string
+                        let pathD = "";
+                        if (points.length > 1) {
+                          pathD = `M ${points[0].x} ${points[0].y} ` + points.slice(1).map(p => `L ${p.x} ${p.y}`).join(" ");
+                        }
+
+                        return (
+                          <div className="w-full overflow-x-auto">
+                            <svg viewBox={`0 0 ${width} ${height}`} className="w-full min-w-[500px] h-auto overflow-visible">
+                              <defs>
+                                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="0%" stopColor="#10b981" stopOpacity="0.4" />
+                                  <stop offset="100%" stopColor="#7c3aed" stopOpacity="0.0" />
+                                </linearGradient>
+                                <linearGradient id="lineGradient" x1="0" y1="0" x2="1" y2="0">
+                                  <stop offset="0%" stopColor="#7c3aed" />
+                                  <stop offset="100%" stopColor="#10b981" />
+                                </linearGradient>
+                              </defs>
+
+                              {/* Y-axis gridlines & labels */}
+                              {[0, 0.25, 0.5, 0.75, 1].map((val, i) => {
+                                const y = height - paddingY - (val * chartHeight);
+                                return (
+                                  <g key={i} className="opacity-40">
+                                    <line
+                                      x1={paddingX}
+                                      y1={y}
+                                      x2={width - paddingX}
+                                      y2={y}
+                                      stroke="#1e293b"
+                                      strokeWidth="1"
+                                      strokeDasharray="4 4"
+                                    />
+                                    <text
+                                      x={paddingX - 10}
+                                      y={y + 4}
+                                      textAnchor="end"
+                                      fill="#94a3b8"
+                                      fontSize="10"
+                                      fontWeight="bold"
+                                    >
+                                      {val * 100}%
+                                    </text>
+                                  </g>
+                                );
+                              })}
+
+                              {/* X-axis base line */}
+                              <line
+                                x1={paddingX}
+                                y1={height - paddingY}
+                                x2={width - paddingX}
+                                y2={height - paddingY}
+                                stroke="#334155"
+                                strokeWidth="1.5"
+                              />
+
+                              {/* Area under the line */}
+                              {points.length > 1 && (
+                                <path
+                                  d={`${pathD} L ${points[points.length - 1].x} ${height - paddingY} L ${points[0].x} ${height - paddingY} Z`}
+                                  fill="url(#chartGradient)"
+                                />
+                              )}
+
+                              {/* Trend line */}
+                              {points.length > 1 ? (
+                                <path
+                                  d={pathD}
+                                  fill="none"
+                                  stroke="url(#lineGradient)"
+                                  strokeWidth="3"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              ) : points.length === 1 ? (
+                                <circle
+                                  cx={points[0].x}
+                                  cy={points[0].y}
+                                  r="4"
+                                  fill="#10b981"
+                                />
+                              ) : null}
+
+                              {/* Data points */}
+                              {points.map((pt, i) => {
+                                const quiz = quizzes.find(q => q._id === pt.r.quizId);
+                                const quizTitle = quiz?.title || 'Deleted Quiz';
+                                return (
+                                  <g key={i} className="group/dot cursor-pointer">
+                                    <circle
+                                      cx={pt.x}
+                                      cy={pt.y}
+                                      r="5"
+                                      className="fill-slate-950 stroke-[#10b981] stroke-[2px] hover:r-7 hover:stroke-[3px] transition-all"
+                                    />
+                                    {/* Hover Tooltip Box */}
+                                    <title>
+                                      {quizTitle}: {pt.r.score}/{pt.r.totalQuestions} ({Math.round(pt.r.score / pt.r.totalQuestions * 100)}%)
+                                    </title>
+                                  </g>
+                                );
+                              })}
+                            </svg>
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  )}
+                </div>
+
+                {/* History List */}
+                <div>
+                  <h3 className="text-base font-bold text-white mb-4 flex items-center gap-2">
+                    <span className="w-1.5 h-4 bg-[#7c3aed] rounded-full inline-block" />
+                    Quiz Attendance Log
+                  </h3>
+                  {totalQuizzes === 0 ? (
+                    <div className="py-12 text-center bg-slate-950 rounded-2xl border border-slate-850 text-slate-500 text-sm font-semibold">
+                      This student has not attended any quizzes yet.
+                    </div>
+                  ) : (
+                    <div className="border border-slate-850 rounded-2xl overflow-hidden bg-slate-950">
+                      <table className="w-full text-left border-collapse">
+                        <thead className="bg-slate-900 text-slate-400 border-b border-slate-850">
+                          <tr>
+                            <th className="px-5 py-3 text-xs font-bold uppercase tracking-wider">Quiz Name</th>
+                            <th className="px-5 py-3 text-xs font-bold uppercase tracking-wider">Score</th>
+                            <th className="px-5 py-3 text-xs font-bold uppercase tracking-wider">Submitted</th>
+                            <th className="px-5 py-3 text-xs font-bold uppercase tracking-wider text-right">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-850">
+                          {sortedResults.reverse().map(r => {
+                            const quiz = quizzes.find(q => q._id === r.quizId);
+                            const quizTitle = quiz?.title || 'Deleted Quiz';
+                            const pct = Math.round(r.score / r.totalQuestions * 100);
+                            return (
+                              <tr key={r._id} className="hover:bg-slate-900/60 transition-colors">
+                                <td className="px-5 py-4 text-sm font-semibold text-white">{quizTitle}</td>
+                                <td className="px-5 py-4 text-sm">
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-extrabold text-white">{r.score}</span>
+                                    <span className="text-slate-500 text-xs">/ {r.totalQuestions}</span>
+                                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${
+                                      pct >= 50 ? 'bg-emerald-950/40 border-emerald-900/40 text-emerald-450' : 'bg-red-955/30 border-red-900/30 text-red-400'
+                                    }`}>
+                                      {pct}%
+                                    </span>
+                                  </div>
+                                </td>
+                                <td className="px-5 py-4 text-xs text-slate-400 font-mono">
+                                  {new Date(r.submittedAt).toLocaleString()}
+                                </td>
+                                <td className="px-5 py-4 text-xs text-right font-bold">
+                                  {r.exitedDueToTabSwitch ? (
+                                    <span className="text-red-400 bg-red-950/40 border border-red-900/35 px-2 py-0.5 rounded-full">
+                                      Terminated
+                                    </span>
+                                  ) : (
+                                    <span className="text-emerald-400 bg-emerald-950/40 border border-emerald-900/35 px-2 py-0.5 rounded-full">
+                                      Completed
+                                    </span>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
