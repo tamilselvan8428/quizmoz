@@ -122,8 +122,8 @@ export default function AdminDashboard() {
         </div>
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <div className="flex items-center gap-4">
-            <div className="bg-purple-100 p-3 rounded-lg">
-              <Shield className="w-6 h-6 text-purple-600" />
+            <div className="bg-yellow-100 p-3 rounded-lg">
+              <Shield className="w-6 h-6 text-yellow-600" />
             </div>
             <div>
               <p className="text-sm text-gray-500">Staff Members</p>
@@ -171,7 +171,7 @@ export default function AdminDashboard() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                       user.role === 'ADMIN' ? 'bg-red-100 text-red-700' :
-                      user.role === 'STAFF' ? 'bg-purple-100 text-purple-700' :
+                      user.role === 'STAFF' ? 'bg-yellow-100 text-yellow-800' :
                       'bg-green-100 text-green-700'
                     }`}>
                       {user.role}

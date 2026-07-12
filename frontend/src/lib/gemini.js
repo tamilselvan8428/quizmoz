@@ -72,5 +72,51 @@ export const aiService = {
       onChunk(fullText);
     }
     return fullText;
+  },
+
+  analyzeQuizResults: async (quizTitle, questions, answers, onChunk) => {
+    const resultsSummary = questions.map((q, idx) => {
+      const selected = answers[idx];
+      const correct = q.correctAnswer;
+      const isCorrect = selected === correct;
+      return {
+        question: q.text,
+        options: q.options,
+        correctOption: q.options[correct],
+        selectedOption: selected === -1 ? "Skipped" : q.options[selected],
+        isCorrect
+      };
+    });
+
+    const prompt = `
+You are an expert tutor. Analyze the student's performance on the quiz "${quizTitle}" and generate a detailed study guide.
+
+Here are the student's answers:
+${JSON.stringify(resultsSummary, null, 2)}
+
+Please provide:
+1. **Performance Analysis**: A brief, encouraging summary of what they did well and which concepts they got wrong or skipped.
+2. **Concept Gaps**: Identify the core concepts they are struggling with based on their incorrect answers. Explain these concepts clearly and simply.
+3. **Continuous Reading & Practice**: Provide structured, readable learning material in Markdown format for the topics they missed, including practical examples or code snippets if relevant, so they can continue reading and bridge their gaps.
+
+Be supportive, educational, and thorough. Use clear markdown formatting.
+`;
+
+    const response = await ai.models.generateContentStream({
+      model: "gemini-3-flash-preview",
+      contents: prompt,
+      config: {
+        systemInstruction: "You are an advanced learning assistant. Provide highly educational, clear, and actionable feedback and study guides based on quiz results.",
+        thinkingConfig: { thinkingLevel: ThinkingLevel.LOW }
+      }
+    });
+
+    let fullText = "";
+    for await (const chunk of response) {
+      const text = chunk.text || "";
+      fullText += text;
+      onChunk(fullText);
+    }
+    return fullText;
   }
 };

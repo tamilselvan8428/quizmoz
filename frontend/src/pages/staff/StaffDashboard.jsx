@@ -147,7 +147,7 @@ export default function StaffDashboard() {
           }`}
         >
           My Quizzes
-          {activeTab === 'quizzes' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600" />}
+          {activeTab === 'quizzes' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 animate-scale-in" />}
         </button>
         <button
           onClick={() => setActiveTab('students')}
@@ -156,7 +156,7 @@ export default function StaffDashboard() {
           }`}
         >
           Student List
-          {activeTab === 'students' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600" />}
+          {activeTab === 'students' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 animate-scale-in" />}
         </button>
         <button
           onClick={() => setActiveTab('results')}
@@ -165,12 +165,12 @@ export default function StaffDashboard() {
           }`}
         >
           Quiz Results
-          {activeTab === 'results' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600" />}
+          {activeTab === 'results' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 animate-scale-in" />}
         </button>
       </div>
 
       {activeTab === 'quizzes' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up" key="quizzes">
           {quizzes.length === 0 ? (
             <div className="col-span-full py-12 text-center bg-white rounded-xl border-2 border-dashed border-gray-200">
               <ClipboardList className="w-12 h-12 text-gray-300 mx-auto mb-4" />
@@ -178,7 +178,7 @@ export default function StaffDashboard() {
             </div>
           ) : (
             quizzes.map(quiz => (
-              <div key={quiz._id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+              <div key={quiz._id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:-translate-y-1 hover:shadow-md hover:border-indigo-100/50 transition-all duration-300">
                 <div className="flex justify-between items-start mb-4">
                   <h3 className="text-lg font-bold text-gray-900">{quiz.title}</h3>
                   <div className="flex gap-2">
@@ -237,7 +237,7 @@ export default function StaffDashboard() {
       )}
 
       {activeTab === 'students' && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden animate-fade-in-up" key="students">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
               <thead className="bg-gray-50">
@@ -266,9 +266,9 @@ export default function StaffDashboard() {
       )}
 
       {activeTab === 'results' && (
-        <div className="space-y-6">
-          <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
-            <span className="text-sm text-gray-500 font-medium">Grouped by Quiz</span>
+        <div className="space-y-6 animate-fade-in-up" key="results">
+          <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+            <span className="text-sm text-slate-500 font-medium">Grouped by Quiz</span>
             <button
               onClick={() => {
                 const data = results.map(r => {
@@ -421,9 +421,9 @@ export default function StaffDashboard() {
       )}
 
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-scale-in">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-scale-in">
               <Trash2 className="w-8 h-8 text-red-600" />
             </div>
             <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">Delete Quiz</h2>
@@ -453,8 +453,8 @@ export default function StaffDashboard() {
       )}
 
       {showScoreUpdate && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-scale-in">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Update Score</h2>
             <p className="text-gray-500 mb-6">Updating score for {selectedResult?.studentName}</p>
             <form onSubmit={handleUpdateScore} className="space-y-4">

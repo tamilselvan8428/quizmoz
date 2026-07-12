@@ -53,7 +53,7 @@ export default function StudentDashboard() {
 
   return (
     <div className="space-y-8">
-      <div className="bg-indigo-600 rounded-2xl p-8 text-white shadow-xl shadow-indigo-200">
+      <div className="bg-indigo-600 rounded-2xl p-8 text-white shadow-xl shadow-indigo-200/40 animate-fade-in-up">
         <h1 className="text-3xl font-bold mb-2">Hello, {user?.name}!</h1>
         <p className="text-indigo-100 opacity-90">Ready to test your knowledge today?</p>
       </div>
@@ -66,7 +66,7 @@ export default function StudentDashboard() {
           }`}
         >
           Available Quizzes
-          {activeTab === 'available' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600" />}
+          {activeTab === 'available' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 animate-scale-in" />}
         </button>
         <button
           onClick={() => setActiveTab('upcoming')}
@@ -75,7 +75,7 @@ export default function StudentDashboard() {
           }`}
         >
           Upcoming Quizzes
-          {activeTab === 'upcoming' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600" />}
+          {activeTab === 'upcoming' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 animate-scale-in" />}
         </button>
         <button
           onClick={() => setActiveTab('results')}
@@ -84,12 +84,12 @@ export default function StudentDashboard() {
           }`}
         >
           My Results
-          {activeTab === 'results' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600" />}
+          {activeTab === 'results' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 animate-scale-in" />}
         </button>
       </div>
 
       {activeTab === 'available' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up" key="available">
           {quizzes.filter(isQuizAvailable).length === 0 ? (
             <div className="col-span-full py-12 text-center bg-white rounded-xl border-2 border-dashed border-gray-200">
               <ClipboardList className="w-12 h-12 text-gray-300 mx-auto mb-4" />
@@ -97,7 +97,7 @@ export default function StudentDashboard() {
             </div>
           ) : (
             quizzes.filter(isQuizAvailable).map(quiz => (
-              <div key={quiz._id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col">
+              <div key={quiz._id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col hover:-translate-y-1 hover:shadow-md hover:border-indigo-100/50 transition-all duration-300">
                 <h3 className="text-lg font-bold text-gray-900 mb-2">{quiz.title}</h3>
                 <p className="text-gray-600 text-sm mb-4 flex-1">{quiz.description}</p>
                 <div className="space-y-2 mb-6">
@@ -112,7 +112,7 @@ export default function StudentDashboard() {
                 </div>
                 <Link
                   to={`/student/quiz/${quiz._id}`}
-                  className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold text-center hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
+                  className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold text-center hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-sm shadow-indigo-100"
                 >
                   Start Quiz <ChevronRight className="w-4 h-4" />
                 </Link>
@@ -123,7 +123,7 @@ export default function StudentDashboard() {
       )}
 
       {activeTab === 'upcoming' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up" key="upcoming">
           {quizzes.filter(isQuizUpcoming).length === 0 ? (
             <div className="col-span-full py-12 text-center bg-white rounded-xl border-2 border-dashed border-gray-200">
               <Clock className="w-12 h-12 text-gray-300 mx-auto mb-4" />
@@ -131,7 +131,7 @@ export default function StudentDashboard() {
             </div>
           ) : (
             quizzes.filter(isQuizUpcoming).map(quiz => (
-              <div key={quiz._id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col opacity-75">
+              <div key={quiz._id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col opacity-75 hover:-translate-y-1 hover:shadow-md hover:border-slate-200 transition-all duration-300">
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="text-lg font-bold text-gray-900">{quiz.title}</h3>
                   <span className="bg-yellow-100 text-yellow-700 text-xs px-2 py-1 rounded-full font-medium">Upcoming</span>
@@ -160,7 +160,7 @@ export default function StudentDashboard() {
       )}
 
       {activeTab === 'results' && (
-        <div className="space-y-4">
+        <div className="space-y-4 animate-fade-in-up" key="results">
           {results.length === 0 ? (
             <div className="py-12 text-center bg-white rounded-xl border-2 border-dashed border-gray-200">
               <Award className="w-12 h-12 text-gray-300 mx-auto mb-4" />
@@ -172,7 +172,7 @@ export default function StudentDashboard() {
               const percentage = (result.score / result.totalQuestions) * 100;
               
               return (
-                <div key={result._id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div key={result._id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-indigo-100/30 transition-all duration-300">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                       <h3 className="text-lg font-bold text-gray-900">{quiz?.title || 'Deleted Quiz'}</h3>

@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../../lib/api.js';
-import { Clock, AlertTriangle, CheckCircle2, Maximize, Award, XCircle, AlertCircle } from 'lucide-react';
+import { Clock, AlertTriangle, CheckCircle2, Maximize, Award, XCircle, AlertCircle, Sparkles, Loader2 } from 'lucide-react';
+import { aiService } from '../../lib/gemini.js';
+import Markdown from 'react-markdown';
 
 export default function QuizPlayer({ user }) {
   const { id } = useParams();
@@ -16,7 +18,45 @@ export default function QuizPlayer({ user }) {
   const [violations, setViolations] = useState(0);
   const [showWarning, setShowWarning] = useState(false);
   const [error, setError] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiAnalysis, setAiAnalysis] = useState('');
+  const [analysisSaved, setAnalysisSaved] = useState(false);
   const containerRef = useRef(null);
+
+  const handleAiAnalysis = async () => {
+    if (!quiz || !answers || aiLoading) return;
+    setAiLoading(true);
+    setAiAnalysis('Thinking...');
+    setAnalysisSaved(false);
+    try {
+      const report = await aiService.analyzeQuizResults(
+        quiz.title,
+        quiz.questions,
+        answers,
+        (chunk) => {
+          setAiAnalysis(chunk);
+        }
+      );
+
+      // Save to Learning Hub
+      const newSession = {
+        studentId: user.id,
+        topic: `Quiz Analysis: ${quiz.title}`,
+        messages: [
+          { role: 'user', text: `Analyze my quiz results for "${quiz.title}"` },
+          { role: 'model', text: report }
+        ],
+      };
+      await api.learning.save(newSession);
+      setAnalysisSaved(true);
+    } catch (err) {
+      console.error(err);
+      setError('AI Analysis failed: ' + err.message);
+      setTimeout(() => setError(''), 3000);
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   const fetchQuiz = async () => {
     try {
@@ -240,6 +280,23 @@ export default function QuizPlayer({ user }) {
 
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-2">
+              <button
+                onClick={handleAiAnalysis}
+                disabled={aiLoading}
+                className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-750 text-white rounded-xl font-bold hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-200 disabled:opacity-50"
+              >
+                {aiLoading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-5 h-5" />
+                    Analyze with AI
+                  </>
+                )}
+              </button>
               {new Date() > new Date(quiz.endTime) ? (
                 <button
                   onClick={() => setShowReview(!showReview)}
@@ -260,6 +317,31 @@ export default function QuizPlayer({ user }) {
               </button>
             </div>
           </div>
+
+          {/* AI Analysis Card */}
+          {aiAnalysis && (
+            <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-8 space-y-6 animate-fade-in-up">
+              <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                <div className="p-2.5 bg-yellow-50 rounded-xl text-yellow-600">
+                  <Sparkles className="w-6 h-6 animate-pulse" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">AI Performance Analysis & Study Guide</h2>
+                  <p className="text-sm text-slate-500">Based on your answers. This guide has been automatically saved to your Learning Hub.</p>
+                </div>
+              </div>
+              
+              <div className="prose prose-sm max-w-none text-gray-800 leading-relaxed max-h-[500px] overflow-y-auto pr-2">
+                <Markdown>{aiAnalysis}</Markdown>
+              </div>
+              
+              {analysisSaved && (
+                <div className="flex items-center gap-2 text-emerald-600 bg-emerald-50 border border-emerald-100 px-4 py-2.5 rounded-xl text-sm font-semibold max-w-fit animate-scale-in">
+                  <CheckCircle2 className="w-5 h-5" /> Saved to Learning Hub!
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Review List */}
           {showReview && new Date() > new Date(quiz.endTime) && (
