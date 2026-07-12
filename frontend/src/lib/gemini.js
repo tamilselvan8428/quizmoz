@@ -1,4 +1,5 @@
 import { GoogleGenAI, Type, ThinkingLevel } from "@google/genai";
+import { api } from "./api.js";
 
 // Using the environment variable if available, falling back to the placeholder
 const API_KEY = process.env.GEMINI_API_KEY || "AIzaSyBr5DnYOiRWgHeCBx8wqM_zWThwyElTw_I";
@@ -84,6 +85,73 @@ export const aiService = {
     } catch (err) {
       console.error("Failed to generate quiz from materials:", err);
       throw err;
+    }
+  },
+
+  generateQuizFromTextOrFile: async ({ fileContent, fileType, rawText, count = 5 }) => {
+    try {
+      const contents = [];
+      
+      if (fileContent) {
+        const parts = fileContent.split(',');
+        const base64Data = parts[1];
+        const mime = fileType || parts[0].match(/data:(.*?);/)[1];
+        contents.push({
+          inlineData: {
+            data: base64Data,
+            mimeType: mime
+          }
+        });
+      }
+      
+      if (rawText) {
+        contents.push(`Provided Text/Book Content:\n${rawText}\n`);
+      }
+      
+      contents.push(
+        `Generate a quiz with ${count} multiple choice questions directly based on the provided study document/text. Return only a JSON array of objects with fields: text (string), options (array of 4 strings), and correctAnswer (number, 0-3).`
+      );
+
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: contents,
+        config: {
+          thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                text: { type: Type.STRING },
+                options: {
+                  type: Type.ARRAY,
+                  items: { type: Type.STRING }
+                },
+                correctAnswer: { type: Type.NUMBER }
+              },
+              required: ["text", "options", "correctAnswer"]
+            }
+          }
+        }
+      });
+
+      return JSON.parse(response.text || "[]");
+    } catch (err) {
+      console.error("Failed to generate quiz from text or file:", err);
+      throw err;
+    }
+  },
+
+  generateQuestionImage: async (questionText) => {
+    try {
+      const prompt = `A clean, professional, high-quality educational vector illustration representing the concept: "${questionText}". Simple style, suitable for a school or college quiz question, no text inside the image, clean dark background.`;
+      
+      const base64Image = await api.ai.generateImage(prompt);
+      return base64Image;
+    } catch (err) {
+      console.error("Failed to generate question image:", err);
+      return null;
     }
   },
 

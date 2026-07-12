@@ -10,6 +10,11 @@ export default function CreateQuiz() {
   const [aiLoading, setAiLoading] = useState(false);
   const [creationMode, setCreationMode] = useState(id ? 'manual' : null);
   const [aiConfig, setAiConfig] = useState({ topic: '', count: 5 });
+  const [aiSourceType, setAiSourceType] = useState('topic'); // 'topic' or 'doc'
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [pastedText, setPastedText] = useState('');
+  const [generateImages, setGenerateImages] = useState(false);
+  const [aiStatusMessage, setAiStatusMessage] = useState('');
   const [error, setError] = useState('');
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
   const [quiz, setQuiz] = useState({
@@ -74,30 +79,93 @@ export default function CreateQuiz() {
     reader.readAsDataURL(file);
   };
 
+  const handleDocUpload = (file) => {
+    if (!file) return;
+    const allowedExtensions = ['.pdf', '.txt'];
+    const isAllowed = allowedExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
+    if (!isAllowed) {
+      setError('Unsupported file format. Please upload a PDF or TXT file, or copy and paste the document text below.');
+      setTimeout(() => setError(''), 5000);
+      return;
+    }
+    if (file.size > 20 * 1024 * 1024) {
+      setError(`File is too large (max 20MB)`);
+      setTimeout(() => setError(''), 3000);
+      return;
+    }
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setUploadedFile({
+        fileContent: reader.result,
+        fileName: file.name,
+        fileType: file.type || 'application/octet-stream'
+      });
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleGenerateAI = async () => {
-    if (!aiConfig.topic) {
+    if (aiSourceType === 'topic' && !aiConfig.topic) {
       setError('Please enter a topic first');
       setTimeout(() => setError(''), 3000);
       return;
     }
+    if (aiSourceType === 'doc' && !uploadedFile && !pastedText) {
+      setError('Please upload a document or paste some text content first');
+      setTimeout(() => setError(''), 3000);
+      return;
+    }
+
     setAiLoading(true);
+    setAiStatusMessage('Generating questions...');
     setError('');
     try {
-      const aiQuestions = await aiService.generateQuiz(aiConfig.topic, aiConfig.count);
-      const formatted = aiQuestions.map((q) => ({ id: crypto.randomUUID(), ...q }));
+      let aiQuestions = [];
+      if (aiSourceType === 'topic') {
+        aiQuestions = await aiService.generateQuiz(aiConfig.topic, aiConfig.count);
+      } else {
+        aiQuestions = await aiService.generateQuizFromTextOrFile({
+          fileContent: uploadedFile?.fileContent,
+          fileType: uploadedFile?.fileType,
+          rawText: pastedText,
+          count: aiConfig.count
+        });
+      }
+
+      let formatted = aiQuestions.map((q) => ({ id: crypto.randomUUID(), ...q }));
+
+      if (generateImages && formatted.length > 0) {
+        setAiStatusMessage('Generating illustrative AI images...');
+        const imagePromises = formatted.map(async (q) => {
+          try {
+            const imgBase64 = await aiService.generateQuestionImage(q.text);
+            return { ...q, image: imgBase64 || undefined };
+          } catch (e) {
+            console.error("Failed to generate image for question:", q.text, e);
+            return q;
+          }
+        });
+        formatted = await Promise.all(imagePromises);
+      }
+      
+      const quizTitle = aiConfig.topic 
+        ? `Quiz on ${aiConfig.topic}` 
+        : (uploadedFile ? `Quiz from ${uploadedFile.fileName}` : 'AI Generated Quiz');
+
       setQuiz({ 
         ...quiz, 
-        topic: aiConfig.topic,
-        title: `Quiz on ${aiConfig.topic}`,
+        topic: aiConfig.topic || 'General',
+        title: quizTitle,
         questions: formatted 
       });
       setCreationMode('manual');
     } catch (error) {
       console.error(error);
-      setError('AI generation failed');
+      setError('AI quiz generation failed');
       setTimeout(() => setError(''), 3000);
     } finally {
       setAiLoading(false);
+      setAiStatusMessage('');
     }
   };
 
@@ -226,7 +294,7 @@ export default function CreateQuiz() {
       <div className="max-w-2xl mx-auto space-y-8 py-12 text-white animate-fade-in">
         <button 
           onClick={() => setCreationMode(null)} 
-          className="flex items-center gap-2 text-slate-400 hover:text-white font-semibold transition-colors bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl text-xs"
+          className="flex items-center gap-2 text-slate-400 hover:text-white font-semibold transition-colors bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-xl text-xs cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" /> Back to selection
         </button>
@@ -247,16 +315,93 @@ export default function CreateQuiz() {
             <p className="text-slate-450">Tell AI what you want to test your students on.</p>
           </div>
 
+          <div className="flex gap-4 border-b border-slate-850">
+            <button
+              onClick={() => setAiSourceType('topic')}
+              className={`pb-3 px-4 font-bold text-sm transition-colors relative whitespace-nowrap cursor-pointer ${
+                aiSourceType === 'topic' ? 'text-yellow-450 border-b-2 border-yellow-500' : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              Generate by Topic
+            </button>
+            <button
+              onClick={() => setAiSourceType('doc')}
+              className={`pb-3 px-4 font-bold text-sm transition-colors relative whitespace-nowrap cursor-pointer ${
+                aiSourceType === 'doc' ? 'text-yellow-450 border-b-2 border-yellow-500' : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              Generate by Document / Text
+            </button>
+          </div>
+
           <div className="space-y-5">
-            <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-slate-450 uppercase mb-1">Quiz Topic</label>
-              <input 
-                placeholder="e.g. React Hooks, Indian History, Quantum Physics" 
-                className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all duration-200" 
-                value={aiConfig.topic} 
-                onChange={e => setAiConfig({...aiConfig, topic: e.target.value})} 
-              />
-            </div>
+            {aiSourceType === 'topic' ? (
+              <div className="space-y-1.5">
+                <label className="block text-xs font-bold text-slate-450 uppercase mb-1">Quiz Topic</label>
+                <input 
+                  placeholder="e.g. React Hooks, Indian History, Quantum Physics" 
+                  className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all duration-200" 
+                  value={aiConfig.topic} 
+                  onChange={e => setAiConfig({...aiConfig, topic: e.target.value})} 
+                />
+              </div>
+            ) : (
+              <div className="space-y-5">
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-slate-455 uppercase mb-1">Upload Reference Document</label>
+                  {!uploadedFile ? (
+                    <div className="w-full flex items-center justify-center">
+                      <label className="w-full flex flex-col items-center px-4 py-6 bg-slate-950 text-slate-400 rounded-xl border border-slate-800 border-dashed cursor-pointer hover:border-[#7c3aed] transition-colors text-center">
+                        <Save className="w-8 h-8 text-slate-500 mb-2 group-hover:scale-115 transition-transform" />
+                        <span className="text-sm font-semibold">Select a PDF or TXT file</span>
+                        <span className="text-xs text-slate-500 mt-1">Maximum file size: 20MB</span>
+                        <input
+                          type="file"
+                          accept=".pdf,.txt"
+                          className="hidden"
+                          onChange={(e) => handleDocUpload(e.target.files[0])}
+                        />
+                      </label>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between p-4 bg-slate-950 border border-slate-800 rounded-xl">
+                      <div className="flex items-center gap-3 overflow-hidden">
+                        <span className="text-sm font-semibold text-white truncate max-w-xs">{uploadedFile.fileName}</span>
+                        <span className="text-xs text-[#10b981] font-bold uppercase shrink-0">Loaded</span>
+                      </div>
+                      <button
+                        onClick={() => setUploadedFile(null)}
+                        className="text-red-450 hover:text-red-300 p-1 rounded-lg hover:bg-slate-850 transition-colors cursor-pointer"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-slate-455 uppercase mb-1">Or Paste Text / Book Content</label>
+                  <textarea
+                    rows="6"
+                    placeholder="Paste a chapter, key notes, or book text here..."
+                    className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all duration-200 resize-none"
+                    value={pastedText}
+                    onChange={(e) => setPastedText(e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-slate-455 uppercase mb-1">Quiz Topic / Title (Optional)</label>
+                  <input 
+                    placeholder="e.g. Chapter 1, Chemical Reactions" 
+                    className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all duration-200" 
+                    value={aiConfig.topic} 
+                    onChange={e => setAiConfig({...aiConfig, topic: e.target.value})} 
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="space-y-1.5">
               <label className="block text-xs font-bold text-slate-450 uppercase mb-1">Number of Questions</label>
               <input 
@@ -269,15 +414,28 @@ export default function CreateQuiz() {
               />
             </div>
 
+            <div className="flex items-center gap-3 py-2 bg-slate-950/40 px-4 rounded-xl border border-slate-800/60">
+              <input
+                type="checkbox"
+                id="generateImages"
+                checked={generateImages}
+                onChange={(e) => setGenerateImages(e.target.checked)}
+                className="w-4.5 h-4.5 text-[#7c3aed] focus:ring-[#7c3aed] bg-slate-950 border-slate-800 rounded accent-[#7c3aed] cursor-pointer"
+              />
+              <label htmlFor="generateImages" className="text-sm font-semibold text-slate-350 cursor-pointer select-none flex items-center gap-1.5">
+                Generate illustrative AI images for questions <span className="text-[10px] bg-[#7c3aed]/10 text-[#a78bfa] border border-[#7c3aed]/20 px-2 py-0.5 rounded-full font-bold uppercase">Imagen 3</span>
+              </label>
+            </div>
+
             <button 
               onClick={handleGenerateAI} 
-              disabled={aiLoading || !aiConfig.topic}
-              className="w-full bg-[#7c3aed] text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-[#6d28d9] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-[#7c3aed]/10 mt-2"
+              disabled={aiLoading || (aiSourceType === 'topic' ? !aiConfig.topic : (!uploadedFile && !pastedText))}
+              className="w-full bg-[#7c3aed] text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-2 hover:bg-[#6d28d9] disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-[#7c3aed]/10 mt-2 cursor-pointer"
             >
               {aiLoading ? (
                 <>
                   <Loader2 className="animate-spin w-6 h-6" />
-                  Generating Quiz...
+                  {aiStatusMessage || 'Generating Quiz...'}
                 </>
               ) : (
                 <>

@@ -276,7 +276,8 @@ export default function StaffDashboard() {
         'Department': r.department || student?.department || 'N/A',
         'Section': r.section || student?.section || 'N/A',
         'Score': `${r.score} / ${r.totalQuestions}`,
-        'Submission Date': new Date(r.submittedAt).toLocaleString()
+        'Submission Date': new Date(r.submittedAt).toLocaleString(),
+        'Status': r.exitedDueToTabSwitch ? 'TERMINATED (Tab switching violation)' : 'Completed'
       };
     });
 
@@ -563,7 +564,8 @@ export default function StaffDashboard() {
                     'Section': r.section || student?.section || 'N/A',
                     'Score': r.score,
                     'Total': r.totalQuestions,
-                    'Submission Date': new Date(r.submittedAt).toLocaleString()
+                    'Submission Date': new Date(r.submittedAt).toLocaleString(),
+                    'Status': r.exitedDueToTabSwitch ? 'TERMINATED (Tab switching violation)' : 'Completed'
                   };
                 });
                 const worksheet = XLSX.utils.json_to_sheet(data);
@@ -652,7 +654,14 @@ export default function StaffDashboard() {
                             return (
                               <tr key={result._id} className="hover:bg-slate-850/40 transition-colors">
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                  <div className="font-semibold text-white text-sm">{result.studentName}</div>
+                                  <div className="font-semibold text-white text-sm flex items-center gap-2">
+                                    <span>{result.studentName}</span>
+                                    {result.exitedDueToTabSwitch && (
+                                      <span className="text-[9px] bg-red-950/60 border border-red-900/50 text-red-400 font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+                                        Terminated
+                                      </span>
+                                    )}
+                                  </div>
                                   <div className="text-xs text-slate-500 font-mono">{result.rollNo}</div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-slate-350 text-sm">

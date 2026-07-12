@@ -357,27 +357,29 @@ export default function StudentDashboard() {
                           </button>
                         ) : (
                           <p className="text-xs text-yellow-450 bg-yellow-500/10 border border-yellow-500/20 px-3 py-1.5 rounded-xl font-medium flex items-center gap-1.5">
-                            <Clock className="w-3.5 h-3.5" /> Answers viewable after quiz window ends on {new Date(quiz.endTime).toLocaleString()}.
+                            <Clock className="w-3.5 h-3.5" /> Answers and AI analysis viewable after quiz window ends on {new Date(quiz.endTime).toLocaleString()}.
                           </p>
                         )}
                         
-                        <button
-                          onClick={() => handleAiAnalysis(result, quiz)}
-                          disabled={aiLoading[result._id]}
-                          className="text-xs font-bold bg-[#7c3aed] text-white hover:bg-[#6d28d9] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-1.5 focus:outline-none px-4 py-1.5 rounded-xl shadow-lg shadow-[#7c3aed]/10 disabled:opacity-50"
-                        >
-                          {aiLoading[result._id] ? (
-                            <>
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                              <span>Analyzing...</span>
-                            </>
-                          ) : (
-                            <>
-                              <Sparkles className="w-3.5 h-3.5" />
-                              <span>Analyze with AI</span>
-                            </>
-                          )}
-                        </button>
+                        {new Date() > new Date(quiz.endTime) && (
+                          <button
+                            onClick={() => handleAiAnalysis(result, quiz)}
+                            disabled={aiLoading[result._id]}
+                            className="text-xs font-bold bg-[#7c3aed] text-white hover:bg-[#6d28d9] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-1.5 focus:outline-none px-4 py-1.5 rounded-xl shadow-lg shadow-[#7c3aed]/10 disabled:opacity-50"
+                          >
+                            {aiLoading[result._id] ? (
+                              <>
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                <span>Analyzing...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles className="w-3.5 h-3.5" />
+                                <span>Analyze with AI</span>
+                              </>
+                            )}
+                          </button>
+                        )}
                       </div>
 
                       {/* AI Analysis Report display box */}

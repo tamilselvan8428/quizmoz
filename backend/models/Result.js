@@ -11,6 +11,7 @@ const resultSchema = new mongoose.Schema({
   totalQuestions: { type: Number, required: true },
   answers: [{ type: Number }],
   submittedAt: { type: Date, default: Date.now },
+  exitedDueToTabSwitch: { type: Boolean, default: false },
 }, { timestamps: true });
 
 export const Result = mongoose.model('Result', resultSchema);

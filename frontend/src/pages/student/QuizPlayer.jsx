@@ -17,6 +17,8 @@ export default function QuizPlayer({ user }) {
   const [showReview, setShowReview] = useState(false);
   const [violations, setViolations] = useState(0);
   const [showWarning, setShowWarning] = useState(false);
+  const [wasTerminated, setWasTerminated] = useState(false);
+  const lastViolationTime = useRef(0);
   const [error, setError] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
   const [aiAnalysis, setAiAnalysis] = useState('');
@@ -77,31 +79,50 @@ export default function QuizPlayer({ user }) {
 
   useEffect(() => {
     fetchQuiz();
+  }, [id]);
 
+  useEffect(() => {
     const handleFullScreenChange = () => {
       setIsFullScreen(!!document.fullscreenElement);
     };
 
+    const handleViolation = () => {
+      const now = Date.now();
+      if (now - lastViolationTime.current > 1500) {
+        lastViolationTime.current = now;
+        setViolations(v => v + 1);
+      }
+    };
+
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'hidden' && isFullScreen && !isFinished) {
-        setViolations(v => v + 1);
+        handleViolation();
+      }
+    };
+
+    const handleBlur = () => {
+      if (isFullScreen && !isFinished) {
+        handleViolation();
       }
     };
 
     document.addEventListener('fullscreenchange', handleFullScreenChange);
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('blur', handleBlur);
     
     return () => {
       document.removeEventListener('fullscreenchange', handleFullScreenChange);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('blur', handleBlur);
     };
-  }, [id, navigate, isFullScreen, isFinished]);
+  }, [isFullScreen, isFinished]);
 
   useEffect(() => {
     if (violations === 1) {
       setShowWarning(true);
     } else if (violations >= 2 && !isFinished) {
-      handleSubmit();
+      setWasTerminated(true);
+      handleSubmit(true);
     }
   }, [violations, isFinished]);
 
@@ -123,12 +144,15 @@ export default function QuizPlayer({ user }) {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (exitedDueToTabSwitch = false) => {
     if (!quiz) return;
     
+    // Ensure event objects from React's onClick handler are not treated as true
+    const isTabSwitchExited = exitedDueToTabSwitch === true;
+
     let score = 0;
     quiz.questions.forEach((q, idx) => {
-      if (answers[idx] === q.correctAnswer) score++;
+      if (Number(answers[idx]) === Number(q.correctAnswer)) score++;
     });
 
     const result = {
@@ -142,6 +166,7 @@ export default function QuizPlayer({ user }) {
       totalQuestions: quiz.questions.length,
       answers,
       submittedAt: new Date().toISOString(),
+      exitedDueToTabSwitch: isTabSwitchExited,
     };
 
     try {
@@ -202,6 +227,18 @@ export default function QuizPlayer({ user }) {
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#7c3aed]/10 rounded-bl-full -z-10 animate-pulse" />
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-yellow-500/5 rounded-tr-full -z-10 animate-pulse" />
  
+            {wasTerminated && (
+              <div className="bg-red-500/10 p-5 rounded-2xl border border-red-500/25 text-red-400 max-w-xl mx-auto flex items-center gap-3.5 text-left mb-6">
+                <AlertCircle className="w-8 h-8 shrink-0 text-red-450 animate-bounce" />
+                <div>
+                  <h3 className="font-bold text-sm text-white">Quiz Terminated</h3>
+                  <p className="text-xs text-red-400/90 mt-0.5 leading-relaxed font-semibold">
+                    This quiz was automatically submitted and ended because you switched tabs or left the full-screen mode multiple times. Your answers up to this point have been graded.
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="w-20 h-20 bg-yellow-500/10 border border-yellow-500/20 rounded-full flex items-center justify-center mx-auto text-yellow-500 animate-bounce">
               <Award className="w-10 h-10" />
             </div>
@@ -234,7 +271,7 @@ export default function QuizPlayer({ user }) {
                     className="text-[#10b981] transition-all duration-1000 ease-out"
                     strokeWidth="10"
                     strokeDasharray={2 * Math.PI * 60}
-                    strokeDashoffset={2 * Math.PI * 60 * (1 - (quiz.questions.filter((q, idx) => answers[idx] === q.correctAnswer).length / quiz.questions.length))}
+                    strokeDashoffset={2 * Math.PI * 60 * (1 - (quiz.questions.filter((q, idx) => Number(answers[idx]) === Number(q.correctAnswer)).length / quiz.questions.length))}
                     strokeLinecap="round"
                     stroke="currentColor"
                     fill="transparent"
@@ -242,9 +279,9 @@ export default function QuizPlayer({ user }) {
                 </svg>
                 <div className="absolute text-center">
                   <span className="text-3xl font-black text-white">
-                    {Math.round((quiz.questions.filter((q, idx) => answers[idx] === q.correctAnswer).length / quiz.questions.length) * 100)}%
+                    {Math.round((quiz.questions.filter((q, idx) => Number(answers[idx]) === Number(q.correctAnswer)).length / quiz.questions.length) * 100)}%
                   </span>
-                  <p className="text-[10px] font-bold text-slate-450 uppercase tracking-wider">Score</p>
+                  <p className="text-[10px] font-bold text-slate-455 uppercase tracking-wider">Score</p>
                 </div>
               </div>
  
@@ -252,13 +289,13 @@ export default function QuizPlayer({ user }) {
               <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
                 <div className="bg-emerald-950/40 border border-emerald-900/50 rounded-2xl p-4 text-center min-w-[120px]">
                   <p className="text-2xl font-black text-green-400">
-                    {quiz.questions.filter((q, idx) => answers[idx] === q.correctAnswer).length}
+                    {quiz.questions.filter((q, idx) => Number(answers[idx]) === Number(q.correctAnswer)).length}
                   </p>
                   <p className="text-[10px] font-bold text-green-500 uppercase tracking-wide">Correct</p>
                 </div>
                 <div className="bg-red-950/40 border border-red-900/50 rounded-2xl p-4 text-center min-w-[120px]">
                   <p className="text-2xl font-black text-red-400">
-                    {quiz.questions.filter((q, idx) => answers[idx] !== -1 && answers[idx] !== q.correctAnswer).length}
+                    {quiz.questions.filter((q, idx) => answers[idx] !== -1 && Number(answers[idx]) !== Number(q.correctAnswer)).length}
                   </p>
                   <p className="text-[10px] font-bold text-red-500 uppercase tracking-wide">Incorrect</p>
                 </div>
@@ -279,23 +316,25 @@ export default function QuizPlayer({ user }) {
  
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-2">
-              <button
-                onClick={handleAiAnalysis}
-                disabled={aiLoading}
-                className="px-6 py-3 bg-[#7c3aed] text-white rounded-xl font-bold hover:bg-[#6d28d9] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#7c3aed]/10 disabled:opacity-50"
-              >
-                {aiLoading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Analyzing...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-5 h-5 animate-pulse" />
-                    Analyze with AI
-                  </>
-                )}
-              </button>
+              {new Date() > new Date(quiz.endTime) && (
+                <button
+                  onClick={handleAiAnalysis}
+                  disabled={aiLoading}
+                  className="px-6 py-3 bg-[#7c3aed] text-white rounded-xl font-bold hover:bg-[#6d28d9] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#7c3aed]/10 disabled:opacity-50"
+                >
+                  {aiLoading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Analyzing...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-5 h-5 animate-pulse" />
+                      Analyze with AI
+                    </>
+                  )}
+                </button>
+              )}
               {new Date() > new Date(quiz.endTime) ? (
                 <button
                   onClick={() => setShowReview(!showReview)}
@@ -305,7 +344,7 @@ export default function QuizPlayer({ user }) {
                 </button>
               ) : (
                 <div className="bg-yellow-500/10 text-yellow-400 text-xs border border-yellow-500/25 px-4 py-3 rounded-xl max-w-sm">
-                  Correct answers will be viewable after the quiz ends on <span className="font-bold">{new Date(quiz.endTime).toLocaleString()}</span>.
+                  Correct answers and AI analysis will be viewable after the quiz ends on <span className="font-bold">{new Date(quiz.endTime).toLocaleString()}</span>.
                 </div>
               )}
               <button
@@ -364,7 +403,7 @@ export default function QuizPlayer({ user }) {
               {quiz.questions.map((q, qIdx) => {
                 const selectedAns = answers[qIdx];
                 const correctAns = q.correctAnswer;
-                const isCorrect = selectedAns === correctAns;
+                const isCorrect = selectedAns !== -1 && Number(selectedAns) === Number(correctAns);
 
                 return (
                   <div key={qIdx} className={`bg-slate-900 rounded-2xl shadow-xl border border-slate-800 p-6 md:p-8 space-y-4 ${
@@ -397,8 +436,8 @@ export default function QuizPlayer({ user }) {
 
                     <div className="grid grid-cols-1 gap-3 mt-4">
                       {q.options.map((opt, optIdx) => {
-                        const isOptCorrect = optIdx === correctAns;
-                        const isOptSelected = optIdx === selectedAns;
+                        const isOptCorrect = Number(optIdx) === Number(correctAns);
+                        const isOptSelected = Number(optIdx) === Number(selectedAns);
 
                         let optClass = "border-slate-800 bg-slate-950 text-slate-350";
                         let icon = null;

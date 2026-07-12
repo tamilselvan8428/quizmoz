@@ -76,6 +76,60 @@ async function startServer() {
     res.json({ status: "ok" });
   });
 
+  // AI Routes
+  app.post("/api/ai/generate-image", authenticate, async (req, res) => {
+    try {
+      const { prompt } = req.body;
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey) {
+        console.error("GEMINI_API_KEY is not defined in backend env");
+        return res.status(500).json({ error: "GEMINI_API_KEY not configured on server" });
+      }
+
+      console.log("Generating image for prompt:", prompt);
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  { text: prompt }
+                ]
+              }
+            ],
+            generationConfig: {
+              responseModalities: ["image"]
+            }
+          })
+        }
+      );
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Gemini Image API response status:", response.status, "error:", errorText);
+        return res.status(response.status).json({ error: `Gemini Image API error: ${errorText}` });
+      }
+
+      const data = await response.json();
+      const inlineData = data.candidates?.[0]?.content?.parts?.[0]?.inlineData;
+      if (!inlineData) {
+        console.error("No image bytes returned in API response:", data);
+        return res.status(500).json({ error: "No image bytes returned from Gemini Image API" });
+      }
+
+      res.json({ image: `data:${inlineData.mimeType};base64,${inlineData.data}` });
+    } catch (err) {
+      console.error("Failed to generate image:", err);
+      res.status(500).json({ error: err.message });
+    }
+  });
+
   // Auth Routes
   app.post("/api/auth/register", async (req, res) => {
     try {
