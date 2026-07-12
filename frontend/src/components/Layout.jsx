@@ -55,14 +55,16 @@ export default function Layout({ user, onLogout, onUpdateUser }) {
           <span className="text-xl font-black text-white tracking-wide">Quizmoz</span>
         </div>
 
-        <div className="flex items-center gap-6">
-          <div className="hidden md:flex items-center gap-5">
-            <Link to="/" className="text-slate-350 hover:text-yellow-400 font-semibold flex items-center gap-1.5 transition-colors">
-              <LayoutDashboard className="w-4.5 h-4.5" /> Dashboard
+        <div className="flex items-center gap-4 sm:gap-6">
+          <div className="flex items-center gap-4 sm:gap-5">
+            <Link to="/" className="text-slate-350 hover:text-yellow-400 font-semibold flex items-center gap-1.5 transition-colors" title="Dashboard">
+              <LayoutDashboard className="w-5 h-5 sm:w-4.5 sm:h-4.5" />
+              <span className="hidden sm:inline">Dashboard</span>
             </Link>
             {user.role === 'STUDENT' && (
-              <Link to="/student/learning" className="text-slate-350 hover:text-yellow-400 font-semibold flex items-center gap-1.5 transition-colors">
-                <GraduationCap className="w-4.5 h-4.5" /> Learning
+              <Link to="/student/learning" className="text-slate-350 hover:text-yellow-400 font-semibold flex items-center gap-1.5 transition-colors" title="Learning">
+                <GraduationCap className="w-5 h-5 sm:w-4.5 sm:h-4.5" />
+                <span className="hidden sm:inline">Learning</span>
               </Link>
             )}
           </div>

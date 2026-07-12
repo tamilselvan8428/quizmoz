@@ -98,6 +98,8 @@ export default function AdminDashboard() {
     return matchesSearch && matchesRole && matchesDept && matchesBatch && matchesSec;
   });
 
+  const hasActiveFilters = searchQuery || roleFilter || deptFilter || batchFilter || secFilter;
+
   return (
     <div className="space-y-8 text-white">
       <div className="flex items-center justify-between">
@@ -221,6 +223,20 @@ export default function AdminDashboard() {
                 <option key={sec} value={sec}>{sec}</option>
               ))}
             </select>
+            {hasActiveFilters && (
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setRoleFilter('');
+                  setDeptFilter('');
+                  setBatchFilter('');
+                  setSecFilter('');
+                }}
+                className="px-4 py-2 text-xs font-bold text-red-400 hover:text-red-300 transition-colors border border-red-900/40 hover:bg-red-955/20 rounded-xl cursor-pointer"
+              >
+                Clear Filters
+              </button>
+            )}
           </div>
         </div>
         <div className="overflow-x-auto animate-fade-in-up">

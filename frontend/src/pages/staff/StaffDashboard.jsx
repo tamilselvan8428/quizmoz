@@ -23,6 +23,8 @@ export default function StaffDashboard() {
   const [expandedResults, setExpandedResults] = useState({});
   const [expandedFolders, setExpandedFolders] = useState({});
   const [studyMaterials, setStudyMaterials] = useState([]);
+  const [materialSearch, setMaterialSearch] = useState('');
+  const [materialTopicFilter, setMaterialTopicFilter] = useState('');
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -445,6 +447,8 @@ export default function StaffDashboard() {
         const batches = Array.from(new Set(students.map(s => s.batch).filter(Boolean))).sort();
         const secs = Array.from(new Set(students.map(s => s.section).filter(Boolean))).sort();
 
+        const hasActiveFilters = studentSearch || studentDeptFilter || studentBatchFilter || studentSecFilter;
+
         return (
           <div className="bg-slate-900 border border-slate-800/80 rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up" key="students">
             <div className="p-6 bg-slate-950/40 border-b border-slate-850/80 flex flex-col xl:flex-row gap-4 items-center justify-between">
@@ -490,6 +494,19 @@ export default function StaffDashboard() {
                     <option key={sec} value={sec}>{sec}</option>
                   ))}
                 </select>
+                {hasActiveFilters && (
+                  <button
+                    onClick={() => {
+                      setStudentSearch('');
+                      setStudentDeptFilter('');
+                      setStudentBatchFilter('');
+                      setStudentSecFilter('');
+                    }}
+                    className="px-4 py-2 text-xs font-bold text-red-400 hover:text-red-300 transition-colors border border-red-900/40 hover:bg-red-955/20 rounded-xl cursor-pointer"
+                  >
+                    Clear Filters
+                  </button>
+                )}
               </div>
             </div>
 
@@ -759,15 +776,66 @@ export default function StaffDashboard() {
         </div>
       )}
 
-      {activeTab === 'materials' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up" key="materials">
-          {studyMaterials.length === 0 ? (
-            <div className="col-span-full py-12 text-center bg-slate-900/40 rounded-2xl border-2 border-dashed border-slate-800 animate-fade-in">
-              <BookOpen className="w-12 h-12 text-slate-655 mx-auto mb-4 animate-pulse" />
-              <p className="text-slate-400 font-bold">No study materials uploaded yet. Click "Upload Document" to start!</p>
+      {activeTab === 'materials' && (() => {
+        const filtered = studyMaterials.filter(m => {
+          const matchesSearch = m.title.toLowerCase().includes(materialSearch.toLowerCase()) ||
+                                (m.description && m.description.toLowerCase().includes(materialSearch.toLowerCase())) ||
+                                m.fileName.toLowerCase().includes(materialSearch.toLowerCase());
+          const matchesTopic = !materialTopicFilter || m.topic === materialTopicFilter;
+          return matchesSearch && matchesTopic;
+        });
+
+        const topics = Array.from(new Set(studyMaterials.map(m => m.topic).filter(Boolean))).sort();
+        const hasActiveFilters = materialSearch || materialTopicFilter;
+
+        return (
+          <div className="space-y-6 w-full col-span-full animate-fade-in-up" key="materials">
+            {/* Filter Controls Row */}
+            <div className="p-5 bg-slate-900/50 border border-slate-800/80 rounded-2xl flex flex-col md:flex-row gap-4 items-center justify-between shadow-xl">
+              <div className="flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-[#10b981]" />
+                <span className="font-bold text-white text-sm">Filter Study Materials</span>
+              </div>
+              <div className="flex flex-wrap gap-3 items-center w-full md:w-auto">
+                <input
+                  type="text"
+                  placeholder="Search materials..."
+                  value={materialSearch}
+                  onChange={(e) => setMaterialSearch(e.target.value)}
+                  className="px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-[#7c3aed] outline-none text-white w-full sm:w-64 transition-all placeholder-slate-500"
+                />
+                <select
+                  value={materialTopicFilter}
+                  onChange={(e) => setMaterialTopicFilter(e.target.value)}
+                  className="px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-[#7c3aed] outline-none text-white transition-all cursor-pointer"
+                >
+                  <option value="">All Topics</option>
+                  {topics.map(t => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </select>
+                {hasActiveFilters && (
+                  <button
+                    onClick={() => {
+                      setMaterialSearch('');
+                      setMaterialTopicFilter('');
+                    }}
+                    className="px-4 py-2 text-xs font-bold text-red-400 hover:text-red-300 transition-colors border border-red-900/40 hover:bg-red-955/20 rounded-xl cursor-pointer"
+                  >
+                    Clear Filters
+                  </button>
+                )}
+              </div>
             </div>
-          ) : (
-            groupMaterialsByFolder(studyMaterials).map(item => {
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filtered.length === 0 ? (
+                <div className="col-span-full py-12 text-center bg-slate-900/40 rounded-2xl border-2 border-dashed border-slate-800 animate-fade-in">
+                  <BookOpen className="w-12 h-12 text-slate-655 mx-auto mb-4 animate-pulse" />
+                  <p className="text-slate-400 font-bold">No matching study materials found.</p>
+                </div>
+              ) : (
+                groupMaterialsByFolder(filtered).map(item => {
               if (item.isFolder) {
                 const isExpanded = expandedFolders[item.folderId];
                 return (
@@ -898,8 +966,10 @@ export default function StaffDashboard() {
               );
             })
           )}
-        </div>
-      )}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Upload Study Material Modal */}
       {showUploadModal && (
