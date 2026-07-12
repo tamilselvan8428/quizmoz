@@ -284,23 +284,23 @@ export default function StaffDashboard() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-white">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Staff Dashboard</h1>
-          <p className="text-gray-500">Manage your quizzes and monitor student performance</p>
+          <h1 className="text-3xl font-black text-white">Staff Dashboard</h1>
+          <p className="text-slate-450 mt-1">Manage your quizzes and monitor student performance</p>
         </div>
         {activeTab === 'materials' ? (
           <button
             onClick={() => setShowUploadModal(true)}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-250"
+            className="bg-[#2059a1] text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-[#1a4b87] transition-all shadow-lg shadow-[#2059a1]/10"
           >
             <Plus className="w-5 h-5" /> Upload Document
           </button>
         ) : (
           <Link
             to="/staff/create-quiz"
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200"
+            className="bg-[#2059a1] text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-[#1a4b87] transition-all shadow-lg shadow-[#2059a1]/10"
           >
             <Plus className="w-5 h-5" /> Create New Quiz
           </Link>
@@ -308,81 +308,81 @@ export default function StaffDashboard() {
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center justify-between">
+        <div className="bg-red-955/50 border border-red-900/50 text-red-400 px-4 py-3 rounded-xl flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={() => setError('')} className="text-red-500 hover:text-red-700">×</button>
+          <button onClick={() => setError('')} className="text-red-450 hover:text-red-300 font-bold">×</button>
         </div>
       )}
 
       {success && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center justify-between">
+        <div className="bg-green-955/50 border border-green-900/50 text-green-400 px-4 py-3 rounded-xl flex items-center justify-between">
           <span>{success}</span>
-          <button onClick={() => setSuccess('')} className="text-green-500 hover:text-green-700">×</button>
+          <button onClick={() => setSuccess('')} className="text-green-450 hover:text-green-300 font-bold">×</button>
         </div>
       )}
 
-      <div className="flex gap-4 border-b border-gray-200">
+      <div className="flex gap-4 border-b border-slate-800 overflow-x-auto">
         <button
           onClick={() => setActiveTab('quizzes')}
-          className={`pb-4 px-4 font-medium transition-colors relative ${
-            activeTab === 'quizzes' ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-700'
+          className={`pb-4 px-4 font-bold text-sm transition-colors relative whitespace-nowrap ${
+            activeTab === 'quizzes' ? 'text-yellow-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           My Quizzes
-          {activeTab === 'quizzes' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 animate-scale-in" />}
+          {activeTab === 'quizzes' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-500 animate-scale-in" />}
         </button>
         <button
           onClick={() => setActiveTab('students')}
-          className={`pb-4 px-4 font-medium transition-colors relative ${
-            activeTab === 'students' ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-700'
+          className={`pb-4 px-4 font-bold text-sm transition-colors relative whitespace-nowrap ${
+            activeTab === 'students' ? 'text-yellow-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           Student List
-          {activeTab === 'students' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 animate-scale-in" />}
+          {activeTab === 'students' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-500 animate-scale-in" />}
         </button>
         <button
           onClick={() => setActiveTab('results')}
-          className={`pb-4 px-4 font-medium transition-colors relative ${
-            activeTab === 'results' ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-700'
+          className={`pb-4 px-4 font-bold text-sm transition-colors relative whitespace-nowrap ${
+            activeTab === 'results' ? 'text-yellow-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           Quiz Results
-          {activeTab === 'results' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 animate-scale-in" />}
+          {activeTab === 'results' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-500 animate-scale-in" />}
         </button>
         <button
           onClick={() => setActiveTab('materials')}
-          className={`pb-4 px-4 font-medium transition-colors relative ${
-            activeTab === 'materials' ? 'text-indigo-600' : 'text-gray-500 hover:text-gray-700'
+          className={`pb-4 px-4 font-bold text-sm transition-colors relative whitespace-nowrap ${
+            activeTab === 'materials' ? 'text-yellow-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           Study Materials
-          {activeTab === 'materials' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-600 animate-scale-in" />}
+          {activeTab === 'materials' && <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-yellow-500 animate-scale-in" />}
         </button>
       </div>
 
       {activeTab === 'quizzes' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up" key="quizzes">
           {quizzes.length === 0 ? (
-            <div className="col-span-full py-12 text-center bg-white rounded-xl border-2 border-dashed border-gray-200">
-              <ClipboardList className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">No quizzes created yet. Start by creating one!</p>
+            <div className="col-span-full py-12 text-center bg-slate-900/40 rounded-2xl border-2 border-dashed border-slate-800">
+              <ClipboardList className="w-12 h-12 text-slate-650 mx-auto mb-4" />
+              <p className="text-slate-400 font-semibold">No quizzes created yet. Start by creating one!</p>
             </div>
           ) : (
             quizzes.map(quiz => (
-              <div key={quiz._id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:-translate-y-1 hover:shadow-md hover:border-indigo-100/50 transition-all duration-300">
+              <div key={quiz._id} className="bg-slate-900/40 backdrop-blur-md p-6 rounded-2xl border border-slate-800/80 flex flex-col hover:-translate-y-1 hover:shadow-2xl hover:border-yellow-500/20 transition-all duration-300 text-white">
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-lg font-bold text-gray-900">{quiz.title}</h3>
+                  <h3 className="text-lg font-bold text-white">{quiz.title}</h3>
                   <div className="flex gap-2">
                     <button
                       onClick={() => exportQuizResults(quiz)}
-                      className="p-1.5 text-gray-400 hover:text-green-600 transition-colors"
+                      className="p-1.5 text-slate-450 hover:text-green-400 transition-colors"
                       title="Export Results to Excel"
                     >
                       <Download className="w-5 h-5" />
                     </button>
                     <button
                       onClick={() => navigate(`/staff/edit-quiz/${quiz._id}`)}
-                      className="p-1.5 text-gray-400 hover:text-indigo-600 transition-colors"
+                      className="p-1.5 text-slate-455 hover:text-[#ecbf21] transition-colors"
                     >
                       <Edit className="w-5 h-5" />
                     </button>
@@ -391,31 +391,31 @@ export default function StaffDashboard() {
                         setSelectedQuiz(quiz);
                         setShowDeleteConfirm(true);
                       }}
-                      className="p-1.5 text-gray-400 hover:text-red-600 transition-colors"
+                      className="p-1.5 text-slate-455 hover:text-red-400 transition-colors"
                     >
                       <Trash2 className="w-5 h-5" />
                     </button>
                   </div>
                 </div>
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">{quiz.description}</p>
-                <div className="space-y-2 text-sm text-gray-500">
+                <p className="text-slate-350 text-sm mb-4 line-clamp-2">{quiz.description}</p>
+                <div className="space-y-2 text-sm text-slate-400">
                   <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
+                    <Clock className="w-4 h-4 text-slate-500" />
                     <span>{quiz.duration} Minutes</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <ClipboardList className="w-4 h-4" />
+                    <ClipboardList className="w-4 h-4 text-slate-500" />
                     <span>{quiz.questions.length} Questions</span>
                   </div>
                 </div>
-                <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">
+                <div className="mt-6 pt-4 border-t border-slate-850 flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
                     {quiz.topic}
                   </span>
-                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    new Date() > new Date(quiz.endTime) ? 'bg-red-100 text-red-700' :
-                    new Date() < new Date(quiz.startTime) ? 'bg-yellow-100 text-yellow-700' :
-                    'bg-green-100 text-green-700'
+                  <span className={`text-xs px-2.5 py-0.5 rounded-full font-semibold border ${
+                    new Date() > new Date(quiz.endTime) ? 'bg-red-500/10 border-red-500/20 text-red-400' :
+                    new Date() < new Date(quiz.startTime) ? 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400' :
+                    'bg-green-500/10 border-green-500/20 text-green-400'
                   }`}>
                     {new Date() > new Date(quiz.endTime) ? 'Ended' :
                      new Date() < new Date(quiz.startTime) ? 'Upcoming' : 'Active'}
@@ -428,24 +428,24 @@ export default function StaffDashboard() {
       )}
 
       {activeTab === 'students' && (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden animate-fade-in-up" key="students">
+        <div className="bg-slate-900 border border-slate-800/80 rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up" key="students">
           <div className="overflow-x-auto">
             <table className="w-full text-left">
-              <thead className="bg-gray-50">
+              <thead className="bg-slate-950 text-slate-400 border-b border-slate-850">
                 <tr>
-                  <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Roll No</th>
-                  <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Department</th>
-                  <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Batch/Sec</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-450 uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Roll No</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Department</th>
+                  <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Batch/Sec</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-slate-850">
                 {students.map(student => (
-                  <tr key={student._id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{student.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-gray-600">{student.rollNo}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-gray-600">{student.department}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                  <tr key={student._id} className="hover:bg-slate-850/40 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap font-semibold text-white">{student.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-slate-350">{student.rollNo}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-slate-350">{student.department}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-slate-350">
                       {student.batch} {student.section && `- ${student.section}`}
                     </td>
                   </tr>
@@ -458,8 +458,8 @@ export default function StaffDashboard() {
 
       {activeTab === 'results' && (
         <div className="space-y-6 animate-fade-in-up" key="results">
-          <div className="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-            <span className="text-sm text-slate-500 font-medium">Grouped by Quiz</span>
+          <div className="flex justify-between items-center bg-slate-900 p-4 rounded-xl border border-slate-800 shadow-xl">
+            <span className="text-sm text-slate-400 font-bold">Grouped by Quiz</span>
             <button
               onClick={() => {
                 const data = results.map(r => {
@@ -481,16 +481,16 @@ export default function StaffDashboard() {
                 XLSX.utils.book_append_sheet(workbook, worksheet, "All Results");
                 XLSX.writeFile(workbook, "all_quiz_results.xlsx");
               }}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 hover:bg-green-700 transition-colors shadow-md shadow-green-100"
+              className="bg-green-650 text-white px-4 py-2 rounded-xl font-bold flex items-center gap-2 hover:bg-green-750 transition-colors shadow-lg shadow-green-600/10"
             >
               <Download className="w-4 h-4" /> Download All Results
             </button>
           </div>
 
           {quizzes.length === 0 ? (
-            <div className="py-12 text-center bg-white rounded-xl border-2 border-dashed border-gray-200">
-              <ClipboardList className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-500">No quizzes created yet. Create a quiz to view student results.</p>
+            <div className="py-12 text-center bg-slate-900/40 rounded-2xl border-2 border-dashed border-slate-800">
+              <ClipboardList className="w-12 h-12 text-slate-650 mx-auto mb-4" />
+              <p className="text-slate-400 font-bold">No quizzes created yet. Create a quiz to view student results.</p>
             </div>
           ) : (
             quizzes.map(quiz => {
@@ -498,22 +498,22 @@ export default function StaffDashboard() {
               const isExpanded = !!expandedResults[quiz._id];
 
               return (
-                <div key={quiz._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden transition-all">
+                <div key={quiz._id} className="bg-slate-900/40 rounded-2xl border border-slate-800 shadow-xl overflow-hidden transition-all text-white">
                   {/* Quiz Summary Header Row */}
-                  <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-gray-50/50">
+                  <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-950/40 border-b border-slate-850/80">
                     <div className="space-y-1">
-                      <h3 className="text-lg font-bold text-gray-900">{quiz.title}</h3>
-                      <p className="text-xs text-gray-500">
-                        Topic: <span className="font-semibold text-gray-700">{quiz.topic}</span> • 
-                        Duration: <span className="font-semibold text-gray-700">{quiz.duration}m</span> • 
-                        Questions: <span className="font-semibold text-gray-700">{quiz.questions.length}</span>
+                      <h3 className="text-lg font-bold text-white">{quiz.title}</h3>
+                      <p className="text-xs text-slate-400">
+                        Topic: <span className="font-semibold text-slate-200">{quiz.topic}</span> • 
+                        Duration: <span className="font-semibold text-slate-200">{quiz.duration}m</span> • 
+                        Questions: <span className="font-semibold text-slate-200">{quiz.questions.length}</span>
                       </p>
                     </div>
 
                     <div className="flex items-center gap-3">
                       {/* Attempts count badge */}
                       <span className={`text-xs font-bold px-3 py-1.5 rounded-full ${
-                        quizResults.length > 0 ? 'bg-indigo-50 text-indigo-700 border border-indigo-100' : 'bg-gray-100 text-gray-500'
+                        quizResults.length > 0 ? 'bg-indigo-950/50 text-indigo-400 border border-indigo-900/30' : 'bg-slate-800 text-slate-450'
                       }`}>
                         {quizResults.length} {quizResults.length === 1 ? 'Attempt' : 'Attempts'}
                       </span>
@@ -522,7 +522,7 @@ export default function StaffDashboard() {
                       {quizResults.length > 0 && (
                         <button
                           onClick={() => exportQuizResults(quiz)}
-                          className="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-emerald-100 transition-all flex items-center gap-1.5"
+                          className="bg-emerald-950/50 text-emerald-400 border border-emerald-900/40 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-emerald-900 transition-all flex items-center gap-1.5"
                           title="Export results for this quiz to Excel"
                         >
                           <Download className="w-3.5 h-3.5" /> Export Excel
@@ -533,7 +533,7 @@ export default function StaffDashboard() {
                       {quizResults.length > 0 && (
                         <button
                           onClick={() => toggleResultExpansion(quiz._id)}
-                          className="text-xs font-bold text-indigo-600 hover:text-indigo-850 px-3 py-1.5 rounded-xl border border-indigo-100 hover:bg-indigo-50/50 transition-all flex items-center gap-1"
+                          className="text-xs font-bold text-indigo-400 hover:text-indigo-300 px-3 py-1.5 rounded-xl border border-indigo-900/40 hover:bg-[#2059a1]/10 transition-all flex items-center gap-1"
                         >
                           <span>{isExpanded ? 'Hide Results' : 'View Results'}</span>
                           {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -544,45 +544,45 @@ export default function StaffDashboard() {
 
                   {/* Collapsible Results Table */}
                   {isExpanded && quizResults.length > 0 && (
-                    <div className="border-t border-gray-100 overflow-x-auto animate-in slide-in-from-top duration-350">
+                    <div className="border-t border-slate-850 overflow-x-auto animate-in slide-in-from-top duration-350">
                       <table className="w-full text-left">
-                        <thead className="bg-gray-50/50">
-                          <tr className="border-b border-gray-100">
-                            <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Student Details</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Department / Sec</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Score</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Submitted At</th>
-                            <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                        <thead className="bg-slate-950 text-slate-400 border-b border-slate-850">
+                          <tr>
+                            <th className="px-6 py-3 text-xs font-bold text-slate-450 uppercase tracking-wider">Student Details</th>
+                            <th className="px-6 py-3 text-xs font-bold text-slate-455 uppercase tracking-wider">Department / Sec</th>
+                            <th className="px-6 py-3 text-xs font-bold text-slate-455 uppercase tracking-wider">Score</th>
+                            <th className="px-6 py-3 text-xs font-bold text-slate-455 uppercase tracking-wider">Submitted At</th>
+                            <th className="px-6 py-3 text-xs font-bold text-slate-455 uppercase tracking-wider text-right">Actions</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
+                        <tbody className="divide-y divide-slate-850">
                           {quizResults.map(result => {
                             const student = students.find(s => s._id === result.studentId);
                             const percentage = (result.score / result.totalQuestions) * 100;
                             return (
-                              <tr key={result._id} className="hover:bg-gray-50/50 transition-colors">
+                              <tr key={result._id} className="hover:bg-slate-850/40 transition-colors">
                                 <td className="px-6 py-4 whitespace-nowrap">
-                                  <div className="font-semibold text-gray-900 text-sm">{result.studentName}</div>
-                                  <div className="text-xs text-gray-500 font-mono">{result.rollNo}</div>
+                                  <div className="font-semibold text-white text-sm">{result.studentName}</div>
+                                  <div className="text-xs text-slate-500 font-mono">{result.rollNo}</div>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-gray-600 text-sm">
+                                <td className="px-6 py-4 whitespace-nowrap text-slate-350 text-sm">
                                   <div>{result.department || student?.department || 'N/A'}</div>
-                                  <div className="text-xs text-gray-400">
+                                  <div className="text-xs text-slate-500">
                                     {result.section || student?.section || 'N/A'} • {student?.batch || 'N/A'}
                                   </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                   <div className="flex items-center gap-1.5">
-                                    <span className="font-extrabold text-gray-900 text-sm">{result.score}</span>
-                                    <span className="text-gray-400 text-xs">/ {result.totalQuestions}</span>
-                                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ml-2 ${
-                                      percentage >= 50 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
+                                    <span className="font-extrabold text-white text-sm">{result.score}</span>
+                                    <span className="text-slate-500 text-xs">/ {result.totalQuestions}</span>
+                                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ml-2 ${
+                                      percentage >= 50 ? 'bg-emerald-950 border-emerald-900/40 text-emerald-450' : 'bg-red-955/50 border-red-900/50 text-red-400'
                                     }`}>
                                       {Math.round(percentage)}%
                                     </span>
                                   </div>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-gray-500 text-sm font-mono">
+                                <td className="px-6 py-4 whitespace-nowrap text-slate-400 text-sm font-mono">
                                   {new Date(result.submittedAt).toLocaleString()}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right">
@@ -592,7 +592,7 @@ export default function StaffDashboard() {
                                       setNewScore(result.score.toString());
                                       setShowScoreUpdate(true);
                                     }}
-                                    className="text-indigo-600 hover:text-indigo-800 text-xs font-bold transition-colors"
+                                    className="text-indigo-400 hover:text-indigo-300 text-xs font-bold transition-colors"
                                   >
                                     Update Marks
                                   </button>
@@ -612,14 +612,14 @@ export default function StaffDashboard() {
       )}
 
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-scale-in">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 animate-scale-in">
-              <Trash2 className="w-8 h-8 text-red-600" />
+        <div className="fixed inset-0 bg-black/65 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-slate-900 border border-slate-800 text-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-scale-in">
+            <div className="w-16 h-16 bg-red-500/10 border border-red-500/25 rounded-full flex items-center justify-center mx-auto mb-6 text-red-500">
+              <Trash2 className="w-8 h-8" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">Delete Quiz</h2>
-            <p className="text-gray-500 text-center mb-8">
-              Are you sure you want to delete <span className="font-bold text-gray-900">{selectedQuiz?.title}</span>? All results associated with this quiz will remain but the quiz itself will be gone.
+            <h2 className="text-2xl font-black text-white text-center mb-2">Delete Quiz</h2>
+            <p className="text-slate-350 text-center mb-8 text-sm leading-relaxed">
+              Are you sure you want to delete <span className="font-bold text-white">{selectedQuiz?.title}</span>? All results associated with this quiz will remain but the quiz itself will be gone.
             </p>
             <div className="flex gap-4">
               <button
@@ -628,13 +628,13 @@ export default function StaffDashboard() {
                   setSelectedQuiz(null);
                   setError('');
                 }}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex-1 px-4 py-2.5 border border-slate-800 text-slate-300 rounded-xl hover:bg-slate-850 transition-colors font-bold text-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteQuiz}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                className="flex-1 px-4 py-2.5 bg-red-650 text-white rounded-xl hover:bg-red-750 transition-colors font-bold text-sm shadow-lg shadow-red-600/15"
               >
                 Delete
               </button>
@@ -644,13 +644,13 @@ export default function StaffDashboard() {
       )}
 
       {showScoreUpdate && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-scale-in">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Update Score</h2>
-            <p className="text-gray-500 mb-6">Updating score for {selectedResult?.studentName}</p>
+        <div className="fixed inset-0 bg-black/65 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-slate-900 border border-slate-800 text-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-scale-in">
+            <h2 className="text-2xl font-black text-white mb-2">Update Score</h2>
+            <p className="text-slate-350 text-sm mb-6">Updating score for {selectedResult?.studentName}</p>
             <form onSubmit={handleUpdateScore} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">New Score (out of {selectedResult?.totalQuestions})</label>
+                <label className="block text-xs font-bold text-slate-400 uppercase mb-1">New Score (out of {selectedResult?.totalQuestions})</label>
                 <input
                   type="number"
                   required
@@ -658,7 +658,7 @@ export default function StaffDashboard() {
                   max={selectedResult?.totalQuestions}
                   value={newScore}
                   onChange={(e) => setNewScore(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
               <div className="flex gap-4 pt-4">
@@ -668,15 +668,15 @@ export default function StaffDashboard() {
                     setShowScoreUpdate(false);
                     setSelectedResult(null);
                     setNewScore('');
-                     setError('');
+                    setError('');
                   }}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2.5 border border-slate-800 text-slate-300 rounded-xl hover:bg-slate-850 transition-colors font-bold text-sm"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                  className="flex-1 px-4 py-2.5 bg-[#2059a1] text-white rounded-xl hover:bg-[#1a4b87] transition-colors font-bold text-sm shadow-lg shadow-[#2059a1]/15"
                 >
                   Update Score
                 </button>
@@ -689,29 +689,29 @@ export default function StaffDashboard() {
       {activeTab === 'materials' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in-up" key="materials">
           {studyMaterials.length === 0 ? (
-            <div className="col-span-full py-12 text-center bg-white rounded-xl border-2 border-dashed border-gray-200 animate-fade-in">
-              <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4 animate-pulse" />
-              <p className="text-gray-500 font-medium">No study materials uploaded yet. Click "Upload Document" to start!</p>
+            <div className="col-span-full py-12 text-center bg-slate-900/40 rounded-2xl border-2 border-dashed border-slate-800 animate-fade-in">
+              <BookOpen className="w-12 h-12 text-slate-655 mx-auto mb-4 animate-pulse" />
+              <p className="text-slate-400 font-bold">No study materials uploaded yet. Click "Upload Document" to start!</p>
             </div>
           ) : (
             groupMaterialsByFolder(studyMaterials).map(item => {
               if (item.isFolder) {
                 const isExpanded = expandedFolders[item.folderId];
                 return (
-                  <div key={item.folderId} className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col hover:shadow-md hover:border-indigo-150 transition-all duration-300 relative col-span-full">
+                  <div key={item.folderId} className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800 flex flex-col hover:shadow-2xl hover:border-yellow-500/20 transition-all duration-300 relative col-span-full text-white">
                     <div className="flex justify-between items-start mb-4 pr-8">
                       <div className="flex items-center gap-3">
-                        <div className="p-2.5 bg-yellow-50 rounded-xl text-yellow-600">
-                          {isExpanded ? <FolderOpen className="w-8 h-8 fill-yellow-200" /> : <Folder className="w-8 h-8 fill-yellow-100" />}
+                        <div className="p-2.5 bg-yellow-550/10 border border-yellow-500/20 rounded-xl text-yellow-500">
+                          {isExpanded ? <FolderOpen className="w-8 h-8 fill-yellow-500/10 animate-bounce" /> : <Folder className="w-8 h-8 fill-yellow-500/5" />}
                         </div>
                         <div>
-                          <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                          <h3 className="text-lg font-bold text-white flex items-center gap-2">
                             {item.title}
-                            <span className="text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-medium">
+                            <span className="text-xs bg-slate-800 text-slate-400 px-2.5 py-0.5 rounded-full font-bold">
                               {item.files.length} Files
                             </span>
                           </h3>
-                          <p className="text-xs text-slate-400 mt-0.5">
+                          <p className="text-xs text-slate-500 mt-1 font-semibold">
                             Created on {new Date(item.createdAt).toLocaleDateString()} • {item.topic || 'General'}
                           </p>
                         </div>
@@ -720,14 +720,14 @@ export default function StaffDashboard() {
                       <div className="flex items-center gap-2 absolute top-6 right-6">
                         <button
                           onClick={() => toggleFolderExpansion(item.folderId)}
-                          className="text-sm font-bold text-indigo-600 hover:text-indigo-850 transition-colors flex items-center gap-1 focus:outline-none bg-slate-50 border border-slate-200/50 px-2.5 py-1 rounded-lg"
+                          className="text-xs font-bold text-indigo-400 hover:text-indigo-300 transition-colors flex items-center gap-1 focus:outline-none bg-slate-950 border border-slate-850 px-3 py-1.5 rounded-xl shadow-sm"
                         >
                           {isExpanded ? 'Hide Files' : 'Open Folder'}
-                          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                          {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
                         </button>
                         <button
                           onClick={() => handleDeleteFolder(item.folderId, item.files)}
-                          className="p-1.5 text-gray-400 hover:text-red-650 rounded-lg hover:bg-slate-50 transition-colors"
+                          className="p-2 text-slate-500 hover:text-red-400 hover:bg-slate-800/45 rounded-xl transition-all"
                           title="Delete Folder & All Files"
                         >
                           <Trash2 className="w-4 h-4" />
@@ -736,24 +736,24 @@ export default function StaffDashboard() {
                     </div>
 
                     {item.description && (
-                      <p className="text-gray-500 text-sm mb-4 bg-slate-50/50 p-2.5 border border-slate-100 rounded-lg">{item.description}</p>
+                      <p className="text-slate-350 text-sm mb-4 bg-slate-950/60 p-3 border border-slate-850 rounded-xl">{item.description}</p>
                     )}
 
                     {isExpanded && (
-                      <div className="mt-4 border-t border-slate-100 pt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-in-up">
+                      <div className="mt-4 border-t border-slate-850 pt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-fade-in-up">
                         {item.files.map(file => (
-                          <div key={file._id} className="p-4 rounded-xl border border-slate-100 bg-slate-50/40 relative flex flex-col justify-between">
+                          <div key={file._id} className="p-4 rounded-xl border border-slate-800 bg-slate-950/40 relative flex flex-col justify-between">
                             <button
                               onClick={() => handleDeleteMaterial(file._id)}
-                              className="absolute top-3 right-3 p-1 text-gray-400 hover:text-red-600 rounded hover:bg-slate-50 transition-colors"
+                              className="absolute top-3 right-3 p-1.5 text-slate-500 hover:text-red-400 hover:bg-slate-800/45 rounded-lg transition-colors"
                               title="Delete file"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
 
                             <div className="mb-3 pr-6">
-                              <h4 className="font-semibold text-gray-900 text-sm truncate">{file.title}</h4>
-                              <p className="text-slate-400 text-[10px] mt-0.5 truncate">{file.fileName}</p>
+                              <h4 className="font-semibold text-white text-sm truncate">{file.title}</h4>
+                              <p className="text-slate-500 text-[10px] mt-0.5 truncate">{file.fileName}</p>
                             </div>
 
                             <button
@@ -764,7 +764,7 @@ export default function StaffDashboard() {
                                 downloadLink.download = file.fileName;
                                 downloadLink.click();
                               }}
-                              className="w-full bg-white border border-slate-200 text-slate-700 py-1.5 rounded-lg text-xs font-semibold hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-200 transition-all flex items-center justify-center gap-1.5"
+                              className="w-full bg-slate-900 border border-slate-800 text-slate-300 py-1.5 rounded-xl text-xs font-semibold hover:bg-slate-850 transition-all flex items-center justify-center gap-1.5"
                             >
                               <Download className="w-3.5 h-3.5" /> Download
                             </button>
@@ -778,32 +778,32 @@ export default function StaffDashboard() {
 
               // Standalone document
               return (
-                <div key={item._id} className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 flex flex-col hover:-translate-y-1 hover:shadow-md hover:border-indigo-100/50 transition-all duration-300 relative">
+                <div key={item._id} className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800 flex flex-col hover:-translate-y-1 hover:shadow-2xl hover:border-yellow-500/20 transition-all duration-300 relative text-white">
                   <button
                     onClick={() => handleDeleteMaterial(item._id)}
-                    className="absolute top-4 right-4 p-1.5 text-gray-400 hover:text-red-650 rounded-lg hover:bg-slate-50 transition-colors"
+                    className="absolute top-4 right-4 p-2 text-slate-505 hover:text-red-400 hover:bg-slate-800/45 rounded-xl transition-all"
                     title="Delete Study Material"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
 
                   <div className="flex justify-between items-start mb-3 pr-8">
-                    <div className="flex items-center gap-2 bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full text-xs font-bold">
+                    <div className="flex items-center gap-2 bg-indigo-950/50 border border-indigo-900/40 text-indigo-400 px-3 py-1 rounded-full text-xs font-bold">
                       <FileText className="w-3.5 h-3.5" />
                       <span>{item.topic || 'General'}</span>
                     </div>
                     {item.fileSize && (
-                      <span className="text-xs text-gray-450">
+                      <span className="text-xs text-slate-500 font-semibold">
                         {Math.round(item.fileSize / 1024)} KB
                       </span>
                     )}
                   </div>
 
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{item.title}</h3>
-                  <p className="text-gray-655 text-sm mb-4 flex-1">{item.description || 'No description provided.'}</p>
+                  <h3 className="text-lg font-bold text-white mb-2">{item.title}</h3>
+                  <p className="text-slate-350 text-sm mb-4 flex-1 leading-relaxed">{item.description || 'No description provided.'}</p>
                   
-                  <div className="border-t border-slate-100 pt-3 flex items-center justify-between text-xs text-slate-400 mb-3">
-                    <span>Uploader: <strong className="text-slate-600 font-semibold">{item.uploaderName}</strong></span>
+                  <div className="border-t border-slate-850 pt-3 flex items-center justify-between text-xs text-slate-500 mb-3 font-semibold">
+                    <span>Uploader: <strong className="text-slate-350 font-bold">{item.uploaderName}</strong></span>
                     <span>{new Date(item.createdAt).toLocaleDateString()}</span>
                   </div>
 
@@ -816,9 +816,9 @@ export default function StaffDashboard() {
                         downloadLink.download = item.fileName;
                         downloadLink.click();
                       }}
-                      className="w-full bg-slate-50 border border-slate-200 text-slate-700 py-2.5 rounded-xl font-semibold hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-200 transition-all flex items-center justify-center gap-2"
+                      className="w-full bg-slate-950 border border-slate-850 text-slate-300 py-2.5 rounded-xl font-bold hover:bg-slate-850 transition-all flex items-center justify-center gap-2"
                     >
-                      <Download className="w-4 h-4" /> Download Document
+                      <Download className="w-4 h-4 text-slate-400" /> Download Document
                     </button>
                   )}
                 </div>
@@ -830,8 +830,8 @@ export default function StaffDashboard() {
 
       {/* Upload Study Material Modal */}
       {showUploadModal && (
-        <div className="fixed inset-0 bg-black/55 backdrop-blur-sm flex items-center justify-center z-[100] p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-8 max-h-[90vh] flex flex-col animate-scale-in relative text-left overflow-hidden">
+        <div className="fixed inset-0 bg-black/65 backdrop-blur-sm flex items-center justify-center z-[100] p-4 overflow-y-auto">
+          <div className="bg-slate-900 border border-slate-800 text-white rounded-3xl shadow-2xl max-w-lg w-full p-8 max-h-[90vh] flex flex-col animate-scale-in relative text-left overflow-hidden">
             <button
               onClick={() => {
                 setShowUploadModal(false);
@@ -846,58 +846,58 @@ export default function StaffDashboard() {
                 });
                 setError('');
               }}
-              className="absolute top-6 right-6 p-1.5 hover:bg-slate-150 rounded-lg text-slate-400 hover:text-slate-600 transition-colors z-10"
+              className="absolute top-6 right-6 p-1.5 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors z-10"
             >
               <X className="w-6 h-6" />
             </button>
 
-            <div className="border-b border-slate-100 pb-4 shrink-0">
-              <h2 className="text-2xl font-bold text-gray-900">Upload Study Material</h2>
-              <p className="text-sm text-slate-405 mt-1">Share documents with students for their preparation.</p>
+            <div className="border-b border-slate-850 pb-4 shrink-0">
+              <h2 className="text-2xl font-black text-white">Upload Study Material</h2>
+              <p className="text-sm text-slate-400 mt-1">Share documents with students for their preparation.</p>
             </div>
 
             <form onSubmit={handleUploadMaterial} className="flex flex-col flex-1 overflow-hidden space-y-4 mt-4">
               <div className="flex-1 overflow-y-auto space-y-4 pr-1 scrollbar-thin">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Document Title</label>
+                  <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Document Title</label>
                   <input
                     type="text"
                     value={uploadForm.title}
                     onChange={(e) => setUploadForm(prev => ({ ...prev, title: e.target.value }))}
                     placeholder="e.g. Introduction to React (Optional for multiple files)"
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-550 outline-none"
+                    className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Topic / Subject</label>
+                  <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Topic / Subject</label>
                   <input
                     type="text"
                     value={uploadForm.topic}
                     onChange={(e) => setUploadForm(prev => ({ ...prev, topic: e.target.value }))}
                     placeholder="e.g. Web Development"
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-550 outline-none"
+                    className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Description</label>
+                  <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Description</label>
                   <textarea
                     value={uploadForm.description}
                     onChange={(e) => setUploadForm(prev => ({ ...prev, description: e.target.value }))}
                     placeholder="Provide a brief summary of this document..."
                     rows="3"
-                    className="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-550 outline-none resize-none"
+                    className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none resize-none font-medium placeholder-slate-500 transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Upload File(s) *</label>
-                  <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-250 border-dashed rounded-2xl bg-slate-50 hover:bg-slate-100/50 transition-colors">
+                  <label className="block text-xs font-bold text-slate-400 uppercase mb-1">Upload File(s) *</label>
+                  <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-800 border-dashed rounded-2xl bg-slate-950 hover:bg-slate-850/40 transition-colors">
                     <div className="space-y-1 text-center">
-                      <FileText className="mx-auto h-12 w-12 text-slate-350" />
-                      <div className="flex text-sm text-slate-600 justify-center">
-                        <label className="relative cursor-pointer rounded-md font-semibold text-indigo-650 hover:text-indigo-750">
+                      <FileText className="mx-auto h-12 w-12 text-slate-550" />
+                      <div className="flex text-sm text-slate-400 justify-center">
+                        <label className="relative cursor-pointer rounded-md font-semibold text-yellow-400 hover:text-yellow-550">
                           <span>Select files</span>
                           <input
                             type="file"
@@ -909,20 +909,20 @@ export default function StaffDashboard() {
                         </label>
                         <p className="pl-1">or drag and drop</p>
                       </div>
-                      <p className="text-xs text-slate-400">PDF, TXT, DOC, XLSX, JPG (Max 20MB per file)</p>
+                      <p className="text-xs text-slate-500 mt-1">PDF, TXT, DOC, XLSX, JPG (Max 20MB per file)</p>
                     </div>
                   </div>
                   {selectedFiles.length > 0 && (
                     <div className="mt-4 space-y-2 max-h-36 overflow-y-auto pr-1">
                       {selectedFiles.map((file, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-2.5 bg-indigo-50/50 rounded-xl border border-indigo-100 text-xs text-indigo-850 animate-scale-in">
+                        <div key={idx} className="flex items-center justify-between p-2.5 bg-indigo-950/40 border border-indigo-900/35 rounded-xl text-xs text-indigo-300 animate-scale-in">
                           <span className="font-semibold truncate pr-2">{file.fileName}</span>
                           <div className="flex items-center gap-2">
-                            <span className="text-slate-400 shrink-0">({Math.round(file.fileSize / 1024)} KB)</span>
+                            <span className="text-slate-500 shrink-0">({Math.round(file.fileSize / 1024)} KB)</span>
                             <button
                               type="button"
                               onClick={() => removeQueuedFile(idx)}
-                              className="p-1 text-slate-450 hover:text-red-500 hover:bg-white rounded-lg transition-all"
+                              className="p-1 text-slate-400 hover:text-red-400 hover:bg-slate-900 rounded-lg transition-all"
                               title="Remove file"
                             >
                               <X className="w-3.5 h-3.5" />
@@ -935,7 +935,7 @@ export default function StaffDashboard() {
                 </div>
               </div>
 
-              <div className="flex gap-4 pt-4 border-t border-slate-100 shrink-0">
+              <div className="flex gap-4 pt-4 border-t border-slate-850 shrink-0">
                 <button
                   type="button"
                   onClick={() => {
@@ -948,14 +948,14 @@ export default function StaffDashboard() {
                     setSelectedFiles([]);
                     setError('');
                   }}
-                  className="flex-1 px-4 py-3 border border-slate-200 text-slate-655 font-semibold rounded-xl hover:bg-slate-50 transition-colors"
+                  className="flex-1 px-4 py-3 border border-slate-800 text-slate-300 font-semibold rounded-xl hover:bg-slate-850 transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={uploading || selectedFiles.length === 0}
-                  className="flex-1 px-4 py-3 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-3 bg-[#2059a1] text-white font-semibold rounded-xl hover:bg-[#1a4b87] disabled:opacity-50 transition-all flex items-center justify-center gap-2"
                 >
                   {uploading ? (
                     <>

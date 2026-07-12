@@ -80,67 +80,67 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-white">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="text-gray-500">Manage users and system access</p>
+          <h1 className="text-3xl font-black text-white">Admin Dashboard</h1>
+          <p className="text-slate-450 mt-1">Manage users and system access</p>
         </div>
         <button
           onClick={() => setShowAddStaff(true)}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 hover:bg-indigo-700 transition-colors"
+          className="bg-[#2059a1] text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-[#1a4b87] transition-all shadow-lg shadow-[#2059a1]/10"
         >
           <UserPlus className="w-5 h-5" /> Add Staff Account
         </button>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center justify-between">
+        <div className="bg-red-955/50 border border-red-900/50 text-red-400 px-4 py-3 rounded-xl flex items-center justify-between">
           <span>{error}</span>
-          <button onClick={() => setError('')} className="text-red-500 hover:text-red-700">×</button>
+          <button onClick={() => setError('')} className="text-red-450 hover:text-red-300 font-bold">×</button>
         </div>
       )}
 
       {success && (
-        <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg flex items-center justify-between">
+        <div className="bg-green-955/50 border border-green-900/50 text-green-400 px-4 py-3 rounded-xl flex items-center justify-between">
           <span>{success}</span>
-          <button onClick={() => setSuccess('')} className="text-green-500 hover:text-green-700">×</button>
+          <button onClick={() => setSuccess('')} className="text-green-450 hover:text-green-300 font-bold">×</button>
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800/80">
           <div className="flex items-center gap-4">
-            <div className="bg-blue-100 p-3 rounded-lg">
-              <Users className="w-6 h-6 text-blue-600" />
+            <div className="bg-blue-950/50 border border-blue-900/35 p-3 rounded-xl text-blue-400">
+              <Users className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Total Users</p>
-              <p className="text-2xl font-bold text-gray-900">{users.length}</p>
+              <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Total Users</p>
+              <p className="text-2xl font-black text-white mt-1">{users.length}</p>
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800/80">
           <div className="flex items-center gap-4">
-            <div className="bg-yellow-100 p-3 rounded-lg">
-              <Shield className="w-6 h-6 text-yellow-600" />
+            <div className="bg-yellow-955/50 border border-yellow-900/35 p-3 rounded-xl text-yellow-450">
+              <Shield className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Staff Members</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Staff Members</p>
+              <p className="text-2xl font-black text-white mt-1 text-yellow-400">
                 {users.filter(u => u.role === 'STAFF').length}
               </p>
             </div>
           </div>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800/80">
           <div className="flex items-center gap-4">
-            <div className="bg-green-100 p-3 rounded-lg">
-              <UserIcon className="w-6 h-6 text-green-600" />
+            <div className="bg-emerald-950/50 border border-emerald-900/35 p-3 rounded-xl text-emerald-400">
+              <UserIcon className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Students</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Students</p>
+              <p className="text-2xl font-black text-white mt-1 text-emerald-400">
                 {users.filter(u => u.role === 'STUDENT').length}
               </p>
             </div>
@@ -148,36 +148,39 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-900">User Management</h2>
+      <div className="bg-slate-900 border border-slate-800/80 rounded-3xl shadow-2xl overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-850">
+          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <span className="w-2 h-5 bg-indigo-500 rounded-full inline-block" />
+            User Management
+          </h2>
         </div>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto animate-fade-in-up">
           <table className="w-full text-left">
-            <thead className="bg-gray-50">
+            <thead className="bg-slate-950 text-slate-400 border-b border-slate-850">
               <tr>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Roll No / ID</th>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Role</th>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Department</th>
-                <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Actions</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Roll No / ID</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Role</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Department</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-slate-850">
               {users.map(user => (
-                <tr key={user._id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{user.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-600">{user.rollNo}</td>
+                <tr key={user._id} className="hover:bg-slate-850/40 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap font-semibold text-white">{user.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-slate-350">{user.rollNo}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      user.role === 'ADMIN' ? 'bg-red-100 text-red-700' :
-                      user.role === 'STAFF' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-green-100 text-green-700'
+                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border ${
+                      user.role === 'ADMIN' ? 'bg-red-955/50 border-red-900/30 text-red-400' :
+                      user.role === 'STAFF' ? 'bg-yellow-950 border border-yellow-900/30 text-yellow-400' :
+                      'bg-emerald-950 border border-emerald-900/30 text-emerald-400'
                     }`}>
                       {user.role}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-600">{user.department}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-slate-350">{user.department}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     <div className="flex items-center justify-end gap-3">
                       {user.role !== 'ADMIN' && (
@@ -187,7 +190,7 @@ export default function AdminDashboard() {
                               setSelectedUser(user);
                               setShowUpdatePassword(true);
                             }}
-                            className="text-indigo-400 hover:text-indigo-600 transition-colors"
+                            className="p-1 text-slate-450 hover:text-[#ecbf21] transition-all"
                             title="Update Password"
                           >
                             <Key className="w-5 h-5" />
@@ -197,7 +200,7 @@ export default function AdminDashboard() {
                               setSelectedUser(user);
                               setShowDeleteConfirm(true);
                             }}
-                            className="text-red-400 hover:text-red-600 transition-colors"
+                            className="p-1 text-slate-450 hover:text-red-400 transition-all"
                             title="Delete User"
                           >
                             <Trash2 className="w-5 h-5" />
@@ -214,61 +217,61 @@ export default function AdminDashboard() {
       </div>
 
       {showAddStaff && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Add New Staff</h2>
+        <div className="fixed inset-0 bg-black/65 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-slate-900 border border-slate-800 text-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-scale-in">
+            <h2 className="text-2xl font-black text-white mb-6">Add New Staff</h2>
             <form onSubmit={handleAddStaff} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <label className="block text-xs font-bold text-slate-450 uppercase mb-1">Full Name</label>
                 <input
                   type="text"
                   required
                   value={newStaff.name}
                   onChange={(e) => setNewStaff({ ...newStaff, name: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Staff ID / Roll No</label>
+                <label className="block text-xs font-bold text-slate-450 uppercase mb-1">Staff ID / Roll No</label>
                 <input
                   type="text"
                   required
                   value={newStaff.rollNo}
                   onChange={(e) => setNewStaff({ ...newStaff, rollNo: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <label className="block text-xs font-bold text-slate-455 uppercase mb-1">Password</label>
                 <input
                   type="password"
                   required
                   value={newStaff.password}
                   onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Department</label>
+                <label className="block text-xs font-bold text-slate-455 uppercase mb-1">Department</label>
                 <input
                   type="text"
                   required
                   value={newStaff.department}
                   onChange={(e) => setNewStaff({ ...newStaff, department: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
               <div className="flex gap-4 pt-4">
                 <button
                   type="button"
                   onClick={() => setShowAddStaff(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2.5 border border-slate-800 text-slate-350 rounded-xl hover:bg-slate-850 transition-colors font-bold text-sm"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                  className="flex-1 px-4 py-2.5 bg-[#2059a1] text-white rounded-xl hover:bg-[#1a4b87] transition-colors font-bold text-sm shadow-lg shadow-[#2059a1]/15"
                 >
                   Create Account
                 </button>
@@ -279,19 +282,19 @@ export default function AdminDashboard() {
       )}
 
       {showUpdatePassword && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Update Password</h2>
-            <p className="text-gray-500 mb-6">Updating password for {selectedUser?.name}</p>
+        <div className="fixed inset-0 bg-black/65 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-slate-900 border border-slate-800 text-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-scale-in">
+            <h2 className="text-2xl font-black text-white mb-2">Update Password</h2>
+            <p className="text-slate-350 text-sm mb-6">Updating password for {selectedUser?.name}</p>
             <form onSubmit={handleUpdatePassword} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                <label className="block text-xs font-bold text-slate-450 uppercase mb-1">New Password</label>
                 <input
                   type="password"
                   required
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
               <div className="flex gap-4 pt-4">
@@ -303,13 +306,13 @@ export default function AdminDashboard() {
                     setNewPassword('');
                     setError('');
                   }}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2.5 border border-slate-800 text-slate-355 rounded-xl hover:bg-slate-855 transition-colors font-bold text-sm"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+                  className="flex-1 px-4 py-2.5 bg-[#2059a1] text-white rounded-xl hover:bg-[#1a4b87] transition-colors font-bold text-sm shadow-lg shadow-[#2059a1]/15"
                 >
                   Update Password
                 </button>
@@ -320,14 +323,14 @@ export default function AdminDashboard() {
       )}
 
       {showDeleteConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Trash2 className="w-8 h-8 text-red-600" />
+        <div className="fixed inset-0 bg-black/65 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="bg-slate-900 border border-slate-800 text-white rounded-3xl shadow-2xl max-w-md w-full p-8 animate-scale-in">
+            <div className="w-16 h-16 bg-red-500/10 border border-red-500/25 rounded-full flex items-center justify-center mx-auto mb-6 text-red-500">
+              <Trash2 className="w-8 h-8" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">Delete User</h2>
-            <p className="text-gray-500 text-center mb-8">
-              Are you sure you want to delete <span className="font-bold text-gray-900">{selectedUser?.name}</span>? This action cannot be undone.
+            <h2 className="text-2xl font-black text-white text-center mb-2">Delete User</h2>
+            <p className="text-slate-355 text-center mb-8 text-sm leading-relaxed">
+              Are you sure you want to delete <span className="font-bold text-white">{selectedUser?.name}</span>? This action cannot be undone.
             </p>
             <div className="flex gap-4">
               <button
@@ -336,13 +339,13 @@ export default function AdminDashboard() {
                   setSelectedUser(null);
                   setError('');
                 }}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex-1 px-4 py-2.5 border border-slate-800 text-slate-355 rounded-xl hover:bg-slate-855 transition-colors font-bold text-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteUser}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                className="flex-1 px-4 py-2.5 bg-red-650 text-white rounded-xl hover:bg-red-750 transition-colors font-bold text-sm shadow-lg shadow-red-650/15"
               >
                 Delete
               </button>
