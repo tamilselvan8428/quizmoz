@@ -4,6 +4,11 @@ import { Users, UserPlus, Trash2, Shield, User as UserIcon, Key } from 'lucide-r
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [roleFilter, setRoleFilter] = useState('');
+  const [deptFilter, setDeptFilter] = useState('');
+  const [batchFilter, setBatchFilter] = useState('');
+  const [secFilter, setSecFilter] = useState('');
   const [showAddStaff, setShowAddStaff] = useState(false);
   const [showUpdatePassword, setShowUpdatePassword] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -79,6 +84,20 @@ export default function AdminDashboard() {
     }
   };
 
+  const depts = Array.from(new Set(users.map(u => u.department).filter(Boolean))).sort();
+  const batches = Array.from(new Set(users.map(u => u.batch).filter(Boolean))).sort();
+  const secs = Array.from(new Set(users.map(u => u.section).filter(Boolean))).sort();
+
+  const filteredUsers = users.filter(user => {
+    const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          user.rollNo.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesRole = !roleFilter || user.role === roleFilter;
+    const matchesDept = !deptFilter || user.department === deptFilter;
+    const matchesBatch = !batchFilter || user.batch === batchFilter;
+    const matchesSec = !secFilter || user.section === secFilter;
+    return matchesSearch && matchesRole && matchesDept && matchesBatch && matchesSec;
+  });
+
   return (
     <div className="space-y-8 text-white">
       <div className="flex items-center justify-between">
@@ -149,11 +168,60 @@ export default function AdminDashboard() {
       </div>
 
       <div className="bg-slate-900 border border-slate-800/80 rounded-3xl shadow-2xl overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-850">
+        <div className="px-6 py-4 border-b border-slate-850 flex flex-col xl:flex-row gap-4 items-center justify-between">
           <h2 className="text-lg font-bold text-white flex items-center gap-2">
             <span className="w-2 h-5 bg-indigo-500 rounded-full inline-block" />
             User Management
           </h2>
+          <div className="flex flex-wrap gap-3 items-center w-full xl:w-auto">
+            <input
+              type="text"
+              placeholder="Search name or ID/roll no..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none text-white w-full sm:w-64 transition-all placeholder-slate-500"
+            />
+            <select
+              value={roleFilter}
+              onChange={(e) => setRoleFilter(e.target.value)}
+              className="px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none text-white transition-all cursor-pointer"
+            >
+              <option value="">All Roles</option>
+              <option value="ADMIN">Admin</option>
+              <option value="STAFF">Staff</option>
+              <option value="STUDENT">Student</option>
+            </select>
+            <select
+              value={deptFilter}
+              onChange={(e) => setDeptFilter(e.target.value)}
+              className="px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none text-white transition-all cursor-pointer"
+            >
+              <option value="">All Departments</option>
+              {depts.map(dept => (
+                <option key={dept} value={dept}>{dept}</option>
+              ))}
+            </select>
+            <select
+              value={batchFilter}
+              onChange={(e) => setBatchFilter(e.target.value)}
+              className="px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none text-white transition-all cursor-pointer"
+            >
+              <option value="">All Batches</option>
+              {batches.map(batch => (
+                <option key={batch} value={batch}>{batch}</option>
+              ))}
+            </select>
+            <select
+              value={secFilter}
+              onChange={(e) => setSecFilter(e.target.value)}
+              className="px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none text-white transition-all cursor-pointer"
+            >
+              <option value="">All Sections</option>
+              {secs.map(sec => (
+                <option key={sec} value={sec}>{sec}</option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="overflow-x-auto animate-fade-in-up">
           <table className="w-full text-left">
@@ -167,20 +235,34 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-850">
-              {users.map(user => (
-                <tr key={user._id} className="hover:bg-slate-850/40 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap font-semibold text-white">{user.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-slate-350">{user.rollNo}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border ${
-                      user.role === 'ADMIN' ? 'bg-red-955/50 border-red-900/30 text-red-400' :
-                      user.role === 'STAFF' ? 'bg-yellow-950 border border-yellow-900/30 text-yellow-400' :
-                      'bg-emerald-950 border border-emerald-900/30 text-emerald-400'
-                    }`}>
-                      {user.role}
-                    </span>
+              {filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan="5" className="px-6 py-8 text-center text-slate-450 font-medium">
+                    No users found matching the selected filters.
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-slate-350">{user.department}</td>
+                </tr>
+              ) : (
+                filteredUsers.map(user => (
+                  <tr key={user._id} className="hover:bg-slate-850/40 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap font-semibold text-white">{user.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-slate-350">{user.rollNo}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2.5 py-0.5 rounded-full text-xs font-bold border ${
+                        user.role === 'ADMIN' ? 'bg-red-955/50 border-red-900/30 text-red-400' :
+                        user.role === 'STAFF' ? 'bg-yellow-950 border border-yellow-900/30 text-yellow-400' :
+                        'bg-emerald-950 border border-emerald-900/30 text-emerald-400'
+                      }`}>
+                        {user.role}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-slate-350 text-sm">
+                      <div>{user.department || 'N/A'}</div>
+                      {user.role === 'STUDENT' && (
+                        <div className="text-xs text-slate-500 mt-0.5">
+                          {user.batch || 'N/A'} {user.section && `• Sec ${user.section}`}
+                        </div>
+                      )}
+                    </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     <div className="flex items-center justify-end gap-3">
                       {user.role !== 'ADMIN' && (
@@ -210,7 +292,7 @@ export default function AdminDashboard() {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>

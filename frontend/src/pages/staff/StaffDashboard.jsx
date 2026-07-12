@@ -8,6 +8,10 @@ export default function StaffDashboard() {
   const [quizzes, setQuizzes] = useState([]);
   const [results, setResults] = useState([]);
   const [students, setStudents] = useState([]);
+  const [studentSearch, setStudentSearch] = useState('');
+  const [studentDeptFilter, setStudentDeptFilter] = useState('');
+  const [studentBatchFilter, setStudentBatchFilter] = useState('');
+  const [studentSecFilter, setStudentSecFilter] = useState('');
   const [activeTab, setActiveTab] = useState('quizzes');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
@@ -427,34 +431,103 @@ export default function StaffDashboard() {
         </div>
       )}
 
-      {activeTab === 'students' && (
-        <div className="bg-slate-900 border border-slate-800/80 rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up" key="students">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
-              <thead className="bg-slate-950 text-slate-400 border-b border-slate-850">
-                <tr>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-450 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Roll No</th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Department</th>
-                  <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Batch/Sec</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-850">
-                {students.map(student => (
-                  <tr key={student._id} className="hover:bg-slate-850/40 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap font-semibold text-white">{student.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-slate-350">{student.rollNo}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-slate-350">{student.department}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-slate-350">
-                      {student.batch} {student.section && `- ${student.section}`}
-                    </td>
+      {activeTab === 'students' && (() => {
+        const filtered = students.filter(student => {
+          const matchesSearch = student.name.toLowerCase().includes(studentSearch.toLowerCase()) ||
+                                student.rollNo.toLowerCase().includes(studentSearch.toLowerCase());
+          const matchesDept = !studentDeptFilter || student.department === studentDeptFilter;
+          const matchesBatch = !studentBatchFilter || student.batch === studentBatchFilter;
+          const matchesSec = !studentSecFilter || student.section === studentSecFilter;
+          return matchesSearch && matchesDept && matchesBatch && matchesSec;
+        });
+
+        const depts = Array.from(new Set(students.map(s => s.department).filter(Boolean))).sort();
+        const batches = Array.from(new Set(students.map(s => s.batch).filter(Boolean))).sort();
+        const secs = Array.from(new Set(students.map(s => s.section).filter(Boolean))).sort();
+
+        return (
+          <div className="bg-slate-900 border border-slate-800/80 rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up" key="students">
+            <div className="p-6 bg-slate-950/40 border-b border-slate-850/80 flex flex-col xl:flex-row gap-4 items-center justify-between">
+              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                <span className="w-2 h-5 bg-[#7c3aed] rounded-full inline-block" />
+                Student List
+              </h2>
+              <div className="flex flex-wrap gap-3 items-center w-full xl:w-auto">
+                <input
+                  type="text"
+                  placeholder="Search name or roll number..."
+                  value={studentSearch}
+                  onChange={(e) => setStudentSearch(e.target.value)}
+                  className="px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-[#7c3aed] outline-none text-white w-full sm:w-64 transition-all placeholder-slate-500"
+                />
+                <select
+                  value={studentDeptFilter}
+                  onChange={(e) => setStudentDeptFilter(e.target.value)}
+                  className="px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-[#7c3aed] outline-none text-white transition-all cursor-pointer"
+                >
+                  <option value="">All Departments</option>
+                  {depts.map(dept => (
+                    <option key={dept} value={dept}>{dept}</option>
+                  ))}
+                </select>
+                <select
+                  value={studentBatchFilter}
+                  onChange={(e) => setStudentBatchFilter(e.target.value)}
+                  className="px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-[#7c3aed] outline-none text-white transition-all cursor-pointer"
+                >
+                  <option value="">All Batches</option>
+                  {batches.map(batch => (
+                    <option key={batch} value={batch}>{batch}</option>
+                  ))}
+                </select>
+                <select
+                  value={studentSecFilter}
+                  onChange={(e) => setStudentSecFilter(e.target.value)}
+                  className="px-4 py-2 bg-slate-950 border border-slate-800 rounded-xl text-sm focus:ring-2 focus:ring-[#7c3aed] outline-none text-white transition-all cursor-pointer"
+                >
+                  <option value="">All Sections</option>
+                  {secs.map(sec => (
+                    <option key={sec} value={sec}>{sec}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-slate-950 text-slate-400 border-b border-slate-850">
+                  <tr>
+                    <th className="px-6 py-4 text-xs font-bold text-slate-450 uppercase tracking-wider">Name</th>
+                    <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Roll No</th>
+                    <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Department</th>
+                    <th className="px-6 py-4 text-xs font-bold text-slate-455 uppercase tracking-wider">Batch/Sec</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-850">
+                  {filtered.length === 0 ? (
+                    <tr>
+                      <td colSpan="4" className="px-6 py-8 text-center text-slate-450 font-medium">
+                        No students found matching the selected filters.
+                      </td>
+                    </tr>
+                  ) : (
+                    filtered.map(student => (
+                      <tr key={student._id} className="hover:bg-slate-850/40 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap font-semibold text-white">{student.name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-slate-350">{student.rollNo}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-slate-350">{student.department}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-slate-350">
+                          {student.batch} {student.section && `- ${student.section}`}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {activeTab === 'results' && (
         <div className="space-y-6 animate-fade-in-up" key="results">
