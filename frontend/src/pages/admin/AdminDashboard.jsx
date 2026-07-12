@@ -88,7 +88,7 @@ export default function AdminDashboard() {
         </div>
         <button
           onClick={() => setShowAddStaff(true)}
-          className="bg-[#2059a1] text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-[#1a4b87] transition-all shadow-lg shadow-[#2059a1]/10"
+          className="bg-[#7c3aed] text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-[#6d28d9] transition-all shadow-lg shadow-[#7c3aed]/10"
         >
           <UserPlus className="w-5 h-5" /> Add Staff Account
         </button>
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
                               setSelectedUser(user);
                               setShowUpdatePassword(true);
                             }}
-                            className="p-1 text-slate-450 hover:text-[#ecbf21] transition-all"
+                            className="p-1 text-slate-450 hover:text-[#10b981] transition-all"
                             title="Update Password"
                           >
                             <Key className="w-5 h-5" />
@@ -228,7 +228,7 @@ export default function AdminDashboard() {
                   required
                   value={newStaff.name}
                   onChange={(e) => setNewStaff({ ...newStaff, name: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
               <div>
@@ -238,7 +238,7 @@ export default function AdminDashboard() {
                   required
                   value={newStaff.rollNo}
                   onChange={(e) => setNewStaff({ ...newStaff, rollNo: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
               <div>
@@ -248,7 +248,7 @@ export default function AdminDashboard() {
                   required
                   value={newStaff.password}
                   onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
               <div>
@@ -258,7 +258,7 @@ export default function AdminDashboard() {
                   required
                   value={newStaff.department}
                   onChange={(e) => setNewStaff({ ...newStaff, department: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
               <div className="flex gap-4 pt-4">
@@ -271,7 +271,7 @@ export default function AdminDashboard() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2.5 bg-[#2059a1] text-white rounded-xl hover:bg-[#1a4b87] transition-colors font-bold text-sm shadow-lg shadow-[#2059a1]/15"
+                  className="flex-1 px-4 py-2.5 bg-[#7c3aed] text-white rounded-xl hover:bg-[#6d28d9] transition-colors font-bold text-sm shadow-lg shadow-[#7c3aed]/15"
                 >
                   Create Account
                 </button>
@@ -294,7 +294,7 @@ export default function AdminDashboard() {
                   required
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
               <div className="flex gap-4 pt-4">
@@ -312,7 +312,7 @@ export default function AdminDashboard() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2.5 bg-[#2059a1] text-white rounded-xl hover:bg-[#1a4b87] transition-colors font-bold text-sm shadow-lg shadow-[#2059a1]/15"
+                  className="flex-1 px-4 py-2.5 bg-[#7c3aed] text-white rounded-xl hover:bg-[#6d28d9] transition-colors font-bold text-sm shadow-lg shadow-[#7c3aed]/15"
                 >
                   Update Password
                 </button>

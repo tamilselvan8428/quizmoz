@@ -167,7 +167,7 @@ export default function Learning() {
                 <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[85%] p-4 rounded-2xl ${
                     msg.role === 'user' 
-                      ? 'bg-[#2059a1] text-white rounded-tr-none' 
+                      ? 'bg-[#7c3aed] text-white rounded-tr-none' 
                       : 'bg-slate-950 border border-slate-850 text-slate-250 rounded-tl-none'
                   }`}>
                     <div className="prose prose-sm max-w-none prose-indigo text-slate-200">
@@ -194,13 +194,13 @@ export default function Learning() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask a follow-up question..."
-                className="flex-1 px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] outline-none text-white font-medium"
+                className="flex-1 px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] outline-none text-white font-medium"
                 disabled={loading}
               />
               <button
                 type="submit"
                 disabled={loading || !input}
-                className="bg-[#2059a1] text-white p-3 rounded-xl hover:bg-[#1a4b87] transition-all disabled:opacity-50 shadow-lg shadow-[#2059a1]/10 flex items-center justify-center"
+                className="bg-[#7c3aed] text-white p-3 rounded-xl hover:bg-[#6d28d9] transition-all disabled:opacity-50 shadow-lg shadow-[#7c3aed]/10 flex items-center justify-center"
               >
                 {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
               </button>
@@ -231,7 +231,7 @@ export default function Learning() {
                             }}
                             className={`w-full text-left p-3 rounded-xl text-sm transition-all flex items-center justify-between border ${
                               quizAnswers[qIdx] === oIdx
-                                ? 'bg-[#2059a1]/20 border-[#2059a1] text-white'
+                                ? 'bg-[#7c3aed]/20 border-[#7c3aed] text-white'
                                 : 'bg-slate-950/80 border-slate-850 hover:bg-slate-850 text-slate-350'
                             } ${
                               showResults && oIdx === q.correctAnswer ? 'bg-green-950/60 border-green-500 text-green-300 font-bold' : ''
@@ -251,7 +251,7 @@ export default function Learning() {
                   {!showResults ? (
                     <button
                       onClick={() => setShowResults(true)}
-                      className="w-full bg-[#ecbf21] text-slate-950 py-3 rounded-xl font-extrabold hover:bg-[#c59e13] transition-colors shadow-lg shadow-yellow-500/10"
+                      className="w-full bg-[#10b981] text-slate-950 py-3 rounded-xl font-extrabold hover:bg-[#059669] transition-colors shadow-lg shadow-yellow-500/10"
                     >
                       Check Answers
                     </button>
@@ -295,9 +295,9 @@ export default function Learning() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Create New Learning Box */}
-        <div className="aspect-square bg-slate-900/40 rounded-3xl border-2 border-dashed border-slate-800 p-8 flex flex-col items-center justify-center text-center group hover:border-[#2059a1] hover:bg-slate-900/60 transition-all cursor-pointer shadow-sm hover:shadow-2xl hover:-translate-y-1"
+        <div className="aspect-square bg-slate-900/40 rounded-3xl border-2 border-dashed border-slate-800 p-8 flex flex-col items-center justify-center text-center group hover:border-[#7c3aed] hover:bg-slate-900/60 transition-all cursor-pointer shadow-sm hover:shadow-2xl hover:-translate-y-1"
              onClick={() => document.getElementById('new-learning-modal')?.classList.remove('hidden')}>
-          <div className="w-16 h-16 bg-[#2059a1]/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-all border border-[#2059a1]/20 text-[#2059a1] group-hover:text-[#ecbf21]">
+          <div className="w-16 h-16 bg-[#7c3aed]/10 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-all border border-[#7c3aed]/20 text-[#7c3aed] group-hover:text-[#10b981]">
             <Plus className="w-8 h-8" />
           </div>
           <h3 className="text-xl font-bold text-white">Create a Learning</h3>
@@ -311,7 +311,7 @@ export default function Learning() {
             onClick={() => setCurrentSession(session)}
             className="aspect-square bg-slate-900/40 rounded-3xl border border-slate-800/80 p-8 flex flex-col justify-between group hover:shadow-2xl hover:border-yellow-500/20 hover:-translate-y-1 transition-all cursor-pointer relative overflow-hidden text-white"
           >
-            <div className="absolute top-0 left-0 w-full h-1 bg-[#2059a1] opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute top-0 left-0 w-full h-1 bg-[#7c3aed] opacity-0 group-hover:opacity-100 transition-opacity" />
             
             <div className="space-y-4">
               <div className="flex justify-between items-start">
@@ -337,7 +337,7 @@ export default function Learning() {
                 <History className="w-3 h-3 text-slate-600" />
                 <span>Last active {new Date(session.lastUpdatedAt).toLocaleDateString()}</span>
               </div>
-              <div className="flex items-center gap-2 text-xs text-[#2059a1] group-hover:text-yellow-400 font-bold uppercase tracking-wider transition-colors">
+              <div className="flex items-center gap-2 text-xs text-[#7c3aed] group-hover:text-yellow-400 font-bold uppercase tracking-wider transition-colors">
                 Continue Learning <ArrowLeft className="w-3 h-3 rotate-180" />
               </div>
             </div>
@@ -374,13 +374,13 @@ export default function Learning() {
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 placeholder="e.g. Quantum Physics, History of Rome..."
-                className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500"
+                className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500"
               />
             </div>
             <button
               type="submit"
               disabled={loading || !topic}
-              className="w-full bg-[#2059a1] text-white py-3 rounded-xl font-bold hover:bg-[#1a4b87] transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-[#2059a1]/10 mt-2"
+              className="w-full bg-[#7c3aed] text-white py-3 rounded-xl font-bold hover:bg-[#6d28d9] transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-[#7c3aed]/10 mt-2"
             >
               {loading ? <Loader2 className="animate-spin" /> : <Sparkles />} Start Learning
             </button>

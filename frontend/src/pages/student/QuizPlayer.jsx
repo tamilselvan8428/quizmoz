@@ -190,7 +190,7 @@ export default function QuizPlayer({ user }) {
           </div>
           <button
             onClick={enterFullScreen}
-            className="w-full bg-[#2059a1] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#1a4b87] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#2059a1]/10"
+            className="w-full bg-[#7c3aed] text-white py-4 rounded-xl font-bold text-lg hover:bg-[#6d28d9] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#7c3aed]/10"
           >
             <Maximize className="w-5 h-5" /> Enter Full Screen & Start
           </button>
@@ -199,7 +199,7 @@ export default function QuizPlayer({ user }) {
           {/* Score Dashboard Card */}
           <div className="bg-slate-900 rounded-3xl shadow-2xl border border-slate-800/80 p-8 text-center space-y-6 relative overflow-hidden">
             {/* Background design elements */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#2059a1]/10 rounded-bl-full -z-10 animate-pulse" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#7c3aed]/10 rounded-bl-full -z-10 animate-pulse" />
             <div className="absolute bottom-0 left-0 w-32 h-32 bg-yellow-500/5 rounded-tr-full -z-10 animate-pulse" />
  
             <div className="w-20 h-20 bg-yellow-500/10 border border-yellow-500/20 rounded-full flex items-center justify-center mx-auto text-yellow-500 animate-bounce">
@@ -231,7 +231,7 @@ export default function QuizPlayer({ user }) {
                     cx="72"
                     cy="72"
                     r="60"
-                    className="text-[#ecbf21] transition-all duration-1000 ease-out"
+                    className="text-[#10b981] transition-all duration-1000 ease-out"
                     strokeWidth="10"
                     strokeDasharray={2 * Math.PI * 60}
                     strokeDashoffset={2 * Math.PI * 60 * (1 - (quiz.questions.filter((q, idx) => answers[idx] === q.correctAnswer).length / quiz.questions.length))}
@@ -268,7 +268,7 @@ export default function QuizPlayer({ user }) {
                   </p>
                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">Skipped</p>
                 </div>
-                <div className="bg-[#2059a1]/10 border border-[#2059a1]/25 rounded-2xl p-4 text-center min-w-[120px]">
+                <div className="bg-[#7c3aed]/10 border border-[#7c3aed]/25 rounded-2xl p-4 text-center min-w-[120px]">
                   <p className="text-2xl font-black text-blue-300">
                     {quiz.questions.length}
                   </p>
@@ -282,7 +282,7 @@ export default function QuizPlayer({ user }) {
               <button
                 onClick={handleAiAnalysis}
                 disabled={aiLoading}
-                className="px-6 py-3 bg-[#2059a1] text-white rounded-xl font-bold hover:bg-[#1a4b87] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#2059a1]/10 disabled:opacity-50"
+                className="px-6 py-3 bg-[#7c3aed] text-white rounded-xl font-bold hover:bg-[#6d28d9] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#7c3aed]/10 disabled:opacity-50"
               >
                 {aiLoading ? (
                   <>
@@ -481,12 +481,12 @@ export default function QuizPlayer({ user }) {
                     }}
                     className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center gap-4 ${
                       answers[currentQuestionIdx] === idx
-                        ? 'border-[#2059a1] bg-[#2059a1]/10 text-white'
+                        ? 'border-[#7c3aed] bg-[#7c3aed]/10 text-white'
                         : 'border-slate-800 hover:border-slate-700 text-slate-350 bg-slate-950/50'
                     }`}
                   >
                     <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                      answers[currentQuestionIdx] === idx ? 'border-[#2059a1] bg-[#2059a1]' : 'border-slate-600 bg-slate-950'
+                      answers[currentQuestionIdx] === idx ? 'border-[#7c3aed] bg-[#7c3aed]' : 'border-slate-600 bg-slate-950'
                     }`}>
                       {answers[currentQuestionIdx] === idx && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                     </div>
@@ -508,7 +508,7 @@ export default function QuizPlayer({ user }) {
               <div className="flex gap-2">
                 {quiz.questions.map((_, idx) => (
                   <div key={idx} className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                    idx === currentQuestionIdx ? 'bg-[#ecbf21]' :
+                    idx === currentQuestionIdx ? 'bg-[#10b981]' :
                     answers[idx] !== -1 ? 'bg-indigo-700/60' : 'bg-slate-800'
                   }`} />
                 ))}
@@ -524,7 +524,7 @@ export default function QuizPlayer({ user }) {
               ) : (
                 <button
                   onClick={() => setCurrentQuestionIdx(i => i + 1)}
-                  className="px-8 py-3 bg-[#2059a1] text-white rounded-xl font-bold hover:bg-[#1a4b87] transition-all shadow-lg shadow-[#2059a1]/10"
+                  className="px-8 py-3 bg-[#7c3aed] text-white rounded-xl font-bold hover:bg-[#6d28d9] transition-all shadow-lg shadow-[#7c3aed]/10"
                 >
                   Next Question
                 </button>
@@ -551,7 +551,7 @@ export default function QuizPlayer({ user }) {
             </div>
             <button
               onClick={() => setShowWarning(false)}
-              className="w-full bg-[#2059a1] text-white py-3.5 rounded-xl font-bold text-base hover:bg-[#194680] transition-all shadow-lg shadow-[#2059a1]/10"
+              className="w-full bg-[#7c3aed] text-white py-3.5 rounded-xl font-bold text-base hover:bg-[#6d28d9] transition-all shadow-lg shadow-[#7c3aed]/10"
             >
               I Understand, Continue Quiz
             </button>

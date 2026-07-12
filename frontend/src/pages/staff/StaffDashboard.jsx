@@ -293,14 +293,14 @@ export default function StaffDashboard() {
         {activeTab === 'materials' ? (
           <button
             onClick={() => setShowUploadModal(true)}
-            className="bg-[#2059a1] text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-[#1a4b87] transition-all shadow-lg shadow-[#2059a1]/10"
+            className="bg-[#7c3aed] text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-[#6d28d9] transition-all shadow-lg shadow-[#7c3aed]/10"
           >
             <Plus className="w-5 h-5" /> Upload Document
           </button>
         ) : (
           <Link
             to="/staff/create-quiz"
-            className="bg-[#2059a1] text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-[#1a4b87] transition-all shadow-lg shadow-[#2059a1]/10"
+            className="bg-[#7c3aed] text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 hover:bg-[#6d28d9] transition-all shadow-lg shadow-[#7c3aed]/10"
           >
             <Plus className="w-5 h-5" /> Create New Quiz
           </Link>
@@ -382,7 +382,7 @@ export default function StaffDashboard() {
                     </button>
                     <button
                       onClick={() => navigate(`/staff/edit-quiz/${quiz._id}`)}
-                      className="p-1.5 text-slate-455 hover:text-[#ecbf21] transition-colors"
+                      className="p-1.5 text-slate-455 hover:text-[#10b981] transition-colors"
                     >
                       <Edit className="w-5 h-5" />
                     </button>
@@ -533,7 +533,7 @@ export default function StaffDashboard() {
                       {quizResults.length > 0 && (
                         <button
                           onClick={() => toggleResultExpansion(quiz._id)}
-                          className="text-xs font-bold text-indigo-400 hover:text-indigo-300 px-3 py-1.5 rounded-xl border border-indigo-900/40 hover:bg-[#2059a1]/10 transition-all flex items-center gap-1"
+                          className="text-xs font-bold text-indigo-400 hover:text-indigo-300 px-3 py-1.5 rounded-xl border border-indigo-900/40 hover:bg-[#7c3aed]/10 transition-all flex items-center gap-1"
                         >
                           <span>{isExpanded ? 'Hide Results' : 'View Results'}</span>
                           {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -658,7 +658,7 @@ export default function StaffDashboard() {
                   max={selectedResult?.totalQuestions}
                   value={newScore}
                   onChange={(e) => setNewScore(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
               <div className="flex gap-4 pt-4">
@@ -676,7 +676,7 @@ export default function StaffDashboard() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2.5 bg-[#2059a1] text-white rounded-xl hover:bg-[#1a4b87] transition-colors font-bold text-sm shadow-lg shadow-[#2059a1]/15"
+                  className="flex-1 px-4 py-2.5 bg-[#7c3aed] text-white rounded-xl hover:bg-[#6d28d9] transition-colors font-bold text-sm shadow-lg shadow-[#7c3aed]/15"
                 >
                   Update Score
                 </button>
@@ -865,7 +865,7 @@ export default function StaffDashboard() {
                     value={uploadForm.title}
                     onChange={(e) => setUploadForm(prev => ({ ...prev, title: e.target.value }))}
                     placeholder="e.g. Introduction to React (Optional for multiple files)"
-                    className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
+                    className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all"
                   />
                 </div>
 
@@ -876,7 +876,7 @@ export default function StaffDashboard() {
                     value={uploadForm.topic}
                     onChange={(e) => setUploadForm(prev => ({ ...prev, topic: e.target.value }))}
                     placeholder="e.g. Web Development"
-                    className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
+                    className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all"
                   />
                 </div>
 
@@ -887,7 +887,7 @@ export default function StaffDashboard() {
                     onChange={(e) => setUploadForm(prev => ({ ...prev, description: e.target.value }))}
                     placeholder="Provide a brief summary of this document..."
                     rows="3"
-                    className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none resize-none font-medium placeholder-slate-500 transition-all"
+                    className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none resize-none font-medium placeholder-slate-500 transition-all"
                   />
                 </div>
 
@@ -955,7 +955,7 @@ export default function StaffDashboard() {
                 <button
                   type="submit"
                   disabled={uploading || selectedFiles.length === 0}
-                  className="flex-1 px-4 py-3 bg-[#2059a1] text-white font-semibold rounded-xl hover:bg-[#1a4b87] disabled:opacity-50 transition-all flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-3 bg-[#7c3aed] text-white font-semibold rounded-xl hover:bg-[#6d28d9] disabled:opacity-50 transition-all flex items-center justify-center gap-2"
                 >
                   {uploading ? (
                     <>

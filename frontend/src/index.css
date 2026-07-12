@@ -1,57 +1,57 @@
 @import "tailwindcss";
 
 @theme {
-  /* Override Indigo palette with custom Blue #2059a1 */
-  --color-indigo-50: #f1f6fb;
-  --color-indigo-100: #dfecf9;
-  --color-indigo-200: #bdd6f3;
-  --color-indigo-300: #90bceb;
-  --color-indigo-400: #5d9be2;
-  --color-indigo-500: #2a76db;
-  --color-indigo-600: #2059a1;
-  --color-indigo-700: #194680;
-  --color-indigo-800: #133866;
-  --color-indigo-900: #102a4d;
-  --color-indigo-950: #0a1a33;
+  /* Override Indigo palette with custom Blue #7c3aed */
+  --color-indigo-50: #f5f3ff;
+  --color-indigo-100: #ede9fe;
+  --color-indigo-200: #ddd6fe;
+  --color-indigo-300: #c4b5fd;
+  --color-indigo-400: #a78bfa;
+  --color-indigo-500: #8b5cf6;
+  --color-indigo-600: #7c3aed;
+  --color-indigo-700: #6d28d9;
+  --color-indigo-800: #5b21b6;
+  --color-indigo-900: #4c1d95;
+  --color-indigo-950: #1e1b4b;
 
   /* Override Blue palette to match */
-  --color-blue-50: #f1f6fb;
-  --color-blue-100: #dfecf9;
-  --color-blue-200: #bdd6f3;
-  --color-blue-300: #90bceb;
-  --color-blue-400: #5d9be2;
-  --color-blue-500: #2a76db;
-  --color-blue-600: #2059a1;
-  --color-blue-700: #194680;
-  --color-blue-800: #133866;
-  --color-blue-900: #102a4d;
-  --color-blue-950: #0a1a33;
+  --color-blue-50: #f5f3ff;
+  --color-blue-100: #ede9fe;
+  --color-blue-200: #ddd6fe;
+  --color-blue-300: #c4b5fd;
+  --color-blue-400: #a78bfa;
+  --color-blue-500: #8b5cf6;
+  --color-blue-600: #7c3aed;
+  --color-blue-700: #6d28d9;
+  --color-blue-800: #5b21b6;
+  --color-blue-900: #4c1d95;
+  --color-blue-950: #1e1b4b;
 
-  /* Override Yellow palette with custom Yellow #ecbf21 */
-  --color-yellow-50: #fefcf2;
-  --color-yellow-100: #fdf5cd;
-  --color-yellow-200: #f9e792;
-  --color-yellow-300: #f5d757;
-  --color-yellow-400: #f1c828;
-  --color-yellow-500: #ecbf21;
-  --color-yellow-600: #c59e13;
-  --color-yellow-700: #96780c;
-  --color-yellow-800: #715a09;
-  --color-yellow-900: #504006;
-  --color-yellow-950: #2f2504;
+  /* Override Yellow palette with custom Yellow #10b981 */
+  --color-yellow-50: #f0fdf4;
+  --color-yellow-100: #dcfce7;
+  --color-yellow-200: #bbf7d0;
+  --color-yellow-300: #86efac;
+  --color-yellow-400: #4ade80;
+  --color-yellow-500: #10b981;
+  --color-yellow-600: #059669;
+  --color-yellow-700: #047857;
+  --color-yellow-800: #065f46;
+  --color-yellow-900: #064e3b;
+  --color-yellow-950: #022c22;
 
   /* Override Amber palette to match yellow accents */
-  --color-amber-50: #fefcf2;
-  --color-amber-100: #fdf5cd;
-  --color-amber-200: #f9e792;
-  --color-amber-300: #f5d757;
-  --color-amber-400: #f1c828;
-  --color-amber-500: #ecbf21;
-  --color-amber-600: #c59e13;
-  --color-amber-700: #96780c;
-  --color-amber-800: #715a09;
-  --color-amber-900: #504006;
-  --color-amber-950: #2f2504;
+  --color-amber-50: #f0fdf4;
+  --color-amber-100: #dcfce7;
+  --color-amber-200: #bbf7d0;
+  --color-amber-300: #86efac;
+  --color-amber-400: #4ade80;
+  --color-amber-500: #10b981;
+  --color-amber-600: #059669;
+  --color-amber-700: #047857;
+  --color-amber-800: #065f46;
+  --color-amber-900: #064e3b;
+  --color-amber-950: #022c22;
 }
 
 @utility animate-fade-in-up {

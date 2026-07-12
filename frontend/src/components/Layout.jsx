@@ -45,11 +45,13 @@ export default function Layout({ user, onLogout, onUpdateUser }) {
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
       <nav className="bg-slate-900/80 border-b border-slate-800/80 backdrop-blur-md px-4 py-3 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-2">
-          <img 
-            src={logo} 
-            alt="Quizmoz Logo" 
-            className="w-10 h-10 object-contain brightness-110 drop-shadow-[0_0_8px_rgba(236,191,33,0.3)]"
-          />
+          <div className="w-10 h-10 bg-yellow-500/10 border border-yellow-500/25 rounded-full p-1 flex items-center justify-center overflow-hidden">
+            <img 
+              src={logo} 
+              alt="Quizmoz Logo" 
+              className="w-full h-full object-cover rounded-full brightness-110"
+            />
+          </div>
           <span className="text-xl font-black text-white tracking-wide">Quizmoz</span>
         </div>
 
@@ -138,7 +140,7 @@ export default function Layout({ user, onLogout, onUpdateUser }) {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
 
@@ -149,7 +151,7 @@ export default function Layout({ user, onLogout, onUpdateUser }) {
                   required
                   value={formData.rollNo}
                   onChange={(e) => setFormData({ ...formData, rollNo: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
 
@@ -159,7 +161,7 @@ export default function Layout({ user, onLogout, onUpdateUser }) {
                   type="text"
                   value={formData.department}
                   onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all"
                 />
               </div>
 
@@ -171,7 +173,7 @@ export default function Layout({ user, onLogout, onUpdateUser }) {
                       type="text"
                       value={formData.section}
                       onChange={(e) => setFormData({ ...formData, section: e.target.value })}
-                      className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
+                      className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all"
                     />
                   </div>
                   <div>
@@ -180,7 +182,7 @@ export default function Layout({ user, onLogout, onUpdateUser }) {
                       type="text"
                       value={formData.batch}
                       onChange={(e) => setFormData({ ...formData, batch: e.target.value })}
-                      className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
+                      className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all"
                     />
                   </div>
                 </div>
@@ -192,7 +194,7 @@ export default function Layout({ user, onLogout, onUpdateUser }) {
                   type="password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#2059a1] text-white outline-none font-medium placeholder-slate-500 transition-all"
+                  className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none font-medium placeholder-slate-500 transition-all"
                   placeholder="••••••••"
                 />
               </div>
@@ -200,7 +202,7 @@ export default function Layout({ user, onLogout, onUpdateUser }) {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#2059a1] hover:bg-[#194680] text-white py-3 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-[#2059a1]/10 mt-2"
+                className="w-full bg-[#7c3aed] hover:bg-[#6d28d9] text-white py-3 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-[#7c3aed]/10 mt-2"
               >
                 {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Save Changes'}
               </button>

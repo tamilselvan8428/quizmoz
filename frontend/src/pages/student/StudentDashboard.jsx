@@ -189,8 +189,8 @@ export default function StudentDashboard() {
 
   return (
     <div className="space-y-8 text-white">
-      <div className="bg-gradient-to-r from-[#2059a1] to-[#153a69] rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden animate-fade-in-up border border-[#2059a1]/20">
-        <div className="absolute right-0 top-0 w-64 h-64 bg-[#ecbf21]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-gradient-to-r from-[#7c3aed] to-[#5b21b6] rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden animate-fade-in-up border border-[#7c3aed]/20">
+        <div className="absolute right-0 top-0 w-64 h-64 bg-[#10b981]/10 rounded-full blur-3xl pointer-events-none" />
         <h1 className="text-3xl font-black mb-2 tracking-tight">Hello, {user?.name}!</h1>
         <p className="text-blue-100 font-semibold opacity-95">Ready to test your knowledge today?</p>
       </div>
@@ -258,7 +258,7 @@ export default function StudentDashboard() {
                 </div>
                 <Link
                   to={`/student/quiz/${quiz._id}`}
-                  className="w-full bg-[#2059a1] text-white py-2.5 rounded-xl font-bold text-center hover:bg-[#1a4b87] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#2059a1]/10"
+                  className="w-full bg-[#7c3aed] text-white py-2.5 rounded-xl font-bold text-center hover:bg-[#6d28d9] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#7c3aed]/10"
                 >
                   Start Quiz <ChevronRight className="w-4 h-4" />
                 </Link>
@@ -362,7 +362,7 @@ export default function StudentDashboard() {
                         <button
                           onClick={() => handleAiAnalysis(result, quiz)}
                           disabled={aiLoading[result._id]}
-                          className="text-xs font-bold bg-[#2059a1] text-white hover:bg-[#1a4b87] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-1.5 focus:outline-none px-4 py-1.5 rounded-xl shadow-lg shadow-[#2059a1]/10 disabled:opacity-50"
+                          className="text-xs font-bold bg-[#7c3aed] text-white hover:bg-[#6d28d9] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-1.5 focus:outline-none px-4 py-1.5 rounded-xl shadow-lg shadow-[#7c3aed]/10 disabled:opacity-50"
                         >
                           {aiLoading[result._id] ? (
                             <>
@@ -581,7 +581,7 @@ export default function StudentDashboard() {
                     
                     <button
                       onClick={() => handleStartSelfTest(item)}
-                      className="mt-4 w-full bg-gradient-to-r from-[#ecbf21] to-[#c59e13] hover:from-[#c59e13] hover:to-[#96780c] text-white py-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-yellow-500/10"
+                      className="mt-4 w-full bg-gradient-to-r from-[#10b981] to-[#059669] hover:from-[#059669] hover:to-[#047857] text-white py-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-yellow-500/10"
                     >
                       <Sparkles className="w-3.5 h-3.5 fill-white/20 animate-pulse" /> Test Myself on Folder
                     </button>
@@ -593,7 +593,7 @@ export default function StudentDashboard() {
               return (
                 <div key={item._id} className="bg-slate-900/40 p-6 rounded-2xl border border-slate-800/80 flex flex-col hover:-translate-y-1 hover:shadow-2xl hover:border-yellow-500/20 transition-all duration-300 relative text-white">
                   <div className="flex justify-between items-start mb-3">
-                    <div className="flex items-center gap-2 bg-[#2059a1]/10 text-blue-300 px-3 py-1 rounded-full text-xs font-bold border border-[#2059a1]/25">
+                    <div className="flex items-center gap-2 bg-[#7c3aed]/10 text-blue-300 px-3 py-1 rounded-full text-xs font-bold border border-[#7c3aed]/25">
                       <FileText className="w-3.5 h-3.5 text-blue-400" />
                       <span>{item.topic || 'General'}</span>
                     </div>
@@ -637,7 +637,7 @@ export default function StudentDashboard() {
 
                       <button
                         onClick={() => handleStartSelfTest(item)}
-                        className="w-full bg-gradient-to-r from-[#ecbf21] to-[#c59e13] hover:from-[#c59e13] hover:to-[#96780c] text-white py-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-yellow-500/10"
+                        className="w-full bg-gradient-to-r from-[#10b981] to-[#059669] hover:from-[#059669] hover:to-[#047857] text-white py-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-lg shadow-yellow-500/10"
                       >
                         <Sparkles className="w-3.5 h-3.5 fill-white/20 animate-pulse" /> Test Myself with AI
                       </button>
@@ -712,13 +712,13 @@ export default function StudentDashboard() {
                           onClick={() => setSelfTestAnswers(prev => ({ ...prev, [currentSelfTestQ]: idx }))}
                           className={`w-full text-left p-4 rounded-xl border font-medium text-sm transition-all flex items-center justify-between group ${
                             isSelected 
-                              ? 'border-[#2059a1] bg-[#2059a1]/10 text-white ring-2 ring-[#2059a1]/30' 
+                              ? 'border-[#7c3aed] bg-[#7c3aed]/10 text-white ring-2 ring-[#7c3aed]/30' 
                               : 'border-slate-800 hover:border-slate-700 hover:bg-slate-850/40 text-slate-300'
                           }`}
                         >
                           <span>{option}</span>
                           <div className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 ml-4 transition-colors ${
-                            isSelected ? 'border-[#2059a1] bg-[#2059a1]' : 'border-slate-655 bg-slate-950 group-hover:border-slate-500'
+                            isSelected ? 'border-[#7c3aed] bg-[#7c3aed]' : 'border-slate-655 bg-slate-950 group-hover:border-slate-500'
                           }`}>
                             {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
                           </div>
@@ -732,12 +732,12 @@ export default function StudentDashboard() {
               {!selfTestLoading && selfTestQuiz && selfTestFinished && (
                 <div className="space-y-6">
                   {/* Results Summary banner */}
-                  <div className="bg-[#2059a1]/15 border border-[#2059a1]/25 rounded-2xl p-6 text-center">
+                  <div className="bg-[#7c3aed]/15 border border-[#7c3aed]/25 rounded-2xl p-6 text-center">
                     <p className="text-xs uppercase tracking-wider text-slate-350 font-bold mb-1">Self-Test Score</p>
                     <p className="text-4xl font-black text-white">
                       {selfTestQuiz.reduce((acc, q, idx) => acc + (selfTestAnswers[idx] === q.correctAnswer ? 1 : 0), 0)} / {selfTestQuiz.length}
                     </p>
-                    <p className="text-xs text-[#ecbf21] mt-2 font-semibold">Great practice session! Review the answers below.</p>
+                    <p className="text-xs text-[#10b981] mt-2 font-semibold">Great practice session! Review the answers below.</p>
                   </div>
 
                   {/* Review Questions list */}
@@ -812,7 +812,7 @@ export default function StudentDashboard() {
                         setSelfTestFinished(true);
                       }
                     }}
-                    className="flex-1 px-4 py-3 bg-[#2059a1] disabled:opacity-50 text-white font-semibold rounded-xl hover:bg-[#194680] transition-colors text-center text-sm shadow-lg shadow-[#2059a1]/10"
+                    className="flex-1 px-4 py-3 bg-[#7c3aed] disabled:opacity-50 text-white font-semibold rounded-xl hover:bg-[#6d28d9] transition-colors text-center text-sm shadow-lg shadow-[#7c3aed]/10"
                   >
                     {currentSelfTestQ < selfTestQuiz.length - 1 ? 'Next Question' : 'Finish Test'}
                   </button>
@@ -823,7 +823,7 @@ export default function StudentDashboard() {
                 <button
                   type="button"
                   onClick={() => setShowSelfTest(false)}
-                  className="w-full px-4 py-3 bg-[#2059a1] text-white font-semibold rounded-xl hover:bg-[#194680] transition-colors text-center text-sm shadow-lg shadow-[#2059a1]/10"
+                  className="w-full px-4 py-3 bg-[#7c3aed] text-white font-semibold rounded-xl hover:bg-[#6d28d9] transition-colors text-center text-sm shadow-lg shadow-[#7c3aed]/10"
                 >
                   Close Practice Test
                 </button>
