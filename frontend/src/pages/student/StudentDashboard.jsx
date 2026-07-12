@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../lib/api.js';
-import { ClipboardList, Award, Clock, ChevronRight, CheckCircle2, XCircle, ChevronDown, ChevronUp, AlertCircle } from 'lucide-react';
+import { ClipboardList, Award, Clock, ChevronRight, CheckCircle2, XCircle, ChevronDown, ChevronUp, AlertCircle, Sparkles, Loader2 } from 'lucide-react';
+import { aiService } from '../../lib/gemini.js';
+import Markdown from 'react-markdown';
 
 export default function StudentDashboard() {
   const [quizzes, setQuizzes] = useState([]);
@@ -9,6 +11,44 @@ export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState('available');
   const [user, setUser] = useState(null);
   const [expandedResults, setExpandedResults] = useState({});
+  const [aiLoading, setAiLoading] = useState({});
+  const [aiAnalysis, setAiAnalysis] = useState({});
+  const [analysisSaved, setAnalysisSaved] = useState({});
+
+  const handleAiAnalysis = async (result, quiz) => {
+    if (!result || !quiz || aiLoading[result._id]) return;
+    
+    setAiLoading(prev => ({ ...prev, [result._id]: true }));
+    setAiAnalysis(prev => ({ ...prev, [result._id]: 'Thinking...' }));
+    setAnalysisSaved(prev => ({ ...prev, [result._id]: false }));
+    
+    try {
+      const report = await aiService.analyzeQuizResults(
+        quiz.title,
+        quiz.questions,
+        result.answers,
+        (chunk) => {
+          setAiAnalysis(prev => ({ ...prev, [result._id]: chunk }));
+        }
+      );
+
+      // Save to Learning Hub
+      const newSession = {
+        studentId: result.studentId,
+        topic: `Quiz Analysis: ${quiz.title}`,
+        messages: [
+          { role: 'user', text: `Analyze my quiz results for "${quiz.title}"` },
+          { role: 'model', text: report }
+        ],
+      };
+      await api.learning.save(newSession);
+      setAnalysisSaved(prev => ({ ...prev, [result._id]: true }));
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setAiLoading(prev => ({ ...prev, [result._id]: false }));
+    }
+  };
 
   const toggleResultExpansion = (resultId) => {
     setExpandedResults(prev => ({
@@ -197,101 +237,137 @@ export default function StudentDashboard() {
                   
                   {/* Show answers after quiz ends */}
                   {quiz && (
-                    <div className="mt-4 pt-4 border-t border-gray-100 flex flex-col items-start">
-                      {new Date() > new Date(quiz.endTime) ? (
-                        <>
+                    <div className="mt-4 pt-4 border-t border-gray-100 flex flex-col items-start gap-4 w-full">
+                      <div className="flex flex-wrap items-center gap-3">
+                        {new Date() > new Date(quiz.endTime) ? (
                           <button
                             onClick={() => toggleResultExpansion(result._id)}
-                            className="text-sm font-bold text-indigo-600 hover:text-indigo-800 transition-colors flex items-center gap-1.5 focus:outline-none"
+                            className="text-sm font-bold text-indigo-600 hover:text-indigo-855 px-3 py-1.5 bg-slate-50 border border-slate-200/60 rounded-xl transition-all flex items-center gap-1.5 focus:outline-none animate-fade-in"
                           >
                             <span>{expandedResults[result._id] ? 'Hide Review' : 'Review Correct Answers'}</span>
                             {expandedResults[result._id] ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                           </button>
-                          
-                          {expandedResults[result._id] && (
-                            <div className="mt-6 w-full space-y-6 animate-in fade-in duration-200">
-                              <h4 className="font-extrabold text-gray-900 text-base">Detailed Question Review</h4>
-                              <div className="space-y-4">
-                                {quiz.questions.map((q, idx) => {
-                                  const selectedAns = result.answers[idx];
-                                  const correctAns = q.correctAnswer;
-                                  const isCorrect = selectedAns === correctAns;
+                        ) : (
+                          <p className="text-xs text-amber-600 bg-amber-50 border border-amber-100 px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5">
+                            <Clock className="w-3.5 h-3.5" /> Answers viewable after quiz window ends on {new Date(quiz.endTime).toLocaleString()}.
+                          </p>
+                        )}
+                        
+                        <button
+                          onClick={() => handleAiAnalysis(result, quiz)}
+                          disabled={aiLoading[result._id]}
+                          className="text-sm font-bold bg-gradient-to-r from-indigo-600 to-indigo-700 text-white hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-1.5 focus:outline-none px-4 py-1.5 rounded-xl shadow-md shadow-indigo-150 disabled:opacity-50"
+                        >
+                          {aiLoading[result._id] ? (
+                            <>
+                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              <span>Analyzing...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="w-3.5 h-3.5" />
+                              <span>Analyze with AI</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
 
-                                  return (
-                                    <div key={idx} className={`p-5 rounded-2xl bg-white border shadow-sm space-y-3 ${
-                                      isCorrect ? 'border-l-4 border-l-emerald-500' : selectedAns === -1 ? 'border-l-4 border-l-gray-400' : 'border-l-4 border-l-red-500'
-                                    }`}>
-                                      <div className="flex justify-between items-start gap-4">
-                                        <p className="font-semibold text-gray-900 text-base leading-relaxed">
-                                          {idx + 1}. {q.text}
-                                        </p>
-                                        <div className="shrink-0">
-                                          {isCorrect ? (
-                                            <span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                                              <CheckCircle2 className="w-3 h-3" /> Correct
-                                            </span>
-                                          ) : selectedAns === -1 ? (
-                                            <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                                              <AlertCircle className="w-3 h-3" /> Skipped
-                                            </span>
-                                          ) : (
-                                            <span className="bg-red-50 text-red-700 px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
-                                              <XCircle className="w-3 h-3" /> Incorrect
-                                            </span>
-                                          )}
-                                        </div>
-                                      </div>
-
-                                      <div className="grid grid-cols-1 gap-2 mt-2">
-                                        {q.options.map((opt, oIdx) => {
-                                          const isOptCorrect = oIdx === correctAns;
-                                          const isOptSelected = oIdx === selectedAns;
-
-                                          let optStyle = "border-gray-100 bg-gray-50/50 text-gray-700";
-                                          let choiceBadge = null;
-
-                                          if (isOptCorrect) {
-                                            optStyle = "border-emerald-500 bg-emerald-50 text-emerald-900 font-semibold";
-                                          } else if (isOptSelected && !isCorrect) {
-                                            optStyle = "border-red-500 bg-red-50 text-red-900 font-semibold";
-                                          }
-
-                                          if (isOptSelected) {
-                                            choiceBadge = (
-                                              <span className={`text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded ${
-                                                isCorrect ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
-                                              }`}>
-                                                Your Choice
-                                              </span>
-                                            );
-                                          }
-
-                                          return (
-                                            <div key={oIdx} className={`p-3 rounded-xl border text-sm flex items-center justify-between gap-4 transition-all ${optStyle}`}>
-                                              <div className="flex items-center gap-2">
-                                                <span className="text-gray-400 font-medium">{String.fromCharCode(65 + oIdx)}.</span>
-                                                <span>{opt}</span>
-                                              </div>
-                                              <div className="flex items-center gap-2">
-                                                {choiceBadge}
-                                                {isOptCorrect && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
-                                                {isOptSelected && !isCorrect && <XCircle className="w-4 h-4 text-red-600" />}
-                                              </div>
-                                            </div>
-                                          );
-                                        })}
-                                      </div>
-                                    </div>
-                                  );
-                                })}
-                              </div>
+                      {/* AI Analysis Report display box */}
+                      {aiAnalysis[result._id] && (
+                        <div className="w-full bg-slate-50/50 rounded-2xl border border-slate-200/80 p-6 space-y-4 animate-fade-in-up mt-2">
+                          <div className="flex items-center gap-2.5 border-b border-slate-200/50 pb-3">
+                            <Sparkles className="w-5 h-5 text-indigo-600 animate-pulse" />
+                            <h4 className="font-extrabold text-gray-900 text-base">AI Performance Analysis & Study Guide</h4>
+                          </div>
+                          <div className="prose prose-sm max-w-none text-gray-800 leading-relaxed max-h-[350px] overflow-y-auto pr-1">
+                            <Markdown>{aiAnalysis[result._id]}</Markdown>
+                          </div>
+                          {analysisSaved[result._id] && (
+                            <div className="flex items-center gap-1.5 text-emerald-600 text-xs font-bold bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-lg max-w-fit animate-scale-in">
+                              <CheckCircle2 className="w-4 h-4 text-emerald-600 animate-bounce" /> Saved to Learning Hub!
                             </div>
                           )}
-                        </>
-                      ) : (
-                        <p className="text-xs text-amber-600 bg-amber-50 border border-amber-100 px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5">
-                          <Clock className="w-3.5 h-3.5" /> Answers can be reviewed once the quiz window ends on {new Date(quiz.endTime).toLocaleString()}.
-                        </p>
+                        </div>
+                      )}
+
+                      {expandedResults[result._id] && new Date() > new Date(quiz.endTime) && (
+                        <div className="mt-2 w-full space-y-6 animate-fade-in-up">
+                          <h4 className="font-extrabold text-gray-900 text-base">Detailed Question Review</h4>
+                          <div className="space-y-4">
+                            {quiz.questions.map((q, idx) => {
+                              const selectedAns = result.answers[idx];
+                              const correctAns = q.correctAnswer;
+                              const isCorrect = selectedAns === correctAns;
+
+                              return (
+                                <div key={idx} className={`p-5 rounded-2xl bg-white border shadow-sm space-y-3 ${
+                                  isCorrect ? 'border-l-4 border-l-emerald-500' : selectedAns === -1 ? 'border-l-4 border-l-gray-400' : 'border-l-4 border-l-red-500'
+                                }`}>
+                                  <div className="flex justify-between items-start gap-4">
+                                    <p className="font-semibold text-gray-900 text-base leading-relaxed">
+                                      {idx + 1}. {q.text}
+                                    </p>
+                                    <div className="shrink-0">
+                                      {isCorrect ? (
+                                        <span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                                          <CheckCircle2 className="w-3 h-3" /> Correct
+                                        </span>
+                                      ) : selectedAns === -1 ? (
+                                        <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                                          <AlertCircle className="w-3 h-3" /> Skipped
+                                        </span>
+                                      ) : (
+                                        <span className="bg-red-50 text-red-700 px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                                          <XCircle className="w-3 h-3" /> Incorrect
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  <div className="grid grid-cols-1 gap-2 mt-2">
+                                    {q.options.map((opt, oIdx) => {
+                                      const isOptCorrect = oIdx === correctAns;
+                                      const isOptSelected = oIdx === selectedAns;
+
+                                      let optStyle = "border-gray-100 bg-gray-50/50 text-gray-700";
+                                      let choiceBadge = null;
+
+                                      if (isOptCorrect) {
+                                        optStyle = "border-emerald-500 bg-emerald-50 text-emerald-900 font-semibold";
+                                      } else if (isOptSelected && !isCorrect) {
+                                        optStyle = "border-red-500 bg-red-50 text-red-900 font-semibold";
+                                      }
+
+                                      if (isOptSelected) {
+                                        choiceBadge = (
+                                          <span className={`text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded ${
+                                            isCorrect ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'
+                                          }`}>
+                                            Your Choice
+                                          </span>
+                                        );
+                                      }
+
+                                      return (
+                                        <div key={oIdx} className={`p-3 rounded-xl border text-sm flex items-center justify-between gap-4 transition-all ${optStyle}`}>
+                                          <div className="flex items-center gap-2">
+                                            <span className="text-gray-400 font-medium">{String.fromCharCode(65 + oIdx)}.</span>
+                                            <span>{opt}</span>
+                                          </div>
+                                          <div className="flex items-center gap-2">
+                                            {choiceBadge}
+                                            {isOptCorrect && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
+                                            {isOptSelected && !isCorrect && <XCircle className="w-4 h-4 text-red-600" />}
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
                       )}
                     </div>
                   )}

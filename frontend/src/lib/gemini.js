@@ -96,8 +96,9 @@ ${JSON.stringify(resultsSummary, null, 2)}
 
 Please provide:
 1. **Performance Analysis**: A brief, encouraging summary of what they did well and which concepts they got wrong or skipped.
-2. **Concept Gaps**: Identify the core concepts they are struggling with based on their incorrect answers. Explain these concepts clearly and simply.
-3. **Continuous Reading & Practice**: Provide structured, readable learning material in Markdown format for the topics they missed, including practical examples or code snippets if relevant, so they can continue reading and bridge their gaps.
+2. **Question-by-Question Explanations**: For each question the student got wrong or skipped, state the question, the correct answer choice, and explain clearly and conceptually **why** that answer is correct.
+3. **Concept Gaps**: Identify the core concepts they are struggling with based on their incorrect answers. Explain these concepts clearly and simply.
+4. **Continuous Reading & Practice**: Provide structured, readable learning material in Markdown format for the topics they missed, including practical examples or code snippets if relevant, so they can continue reading and bridge their gaps.
 
 Be supportive, educational, and thorough. Use clear markdown formatting.
 `;
