@@ -11,6 +11,7 @@ export default function CreateQuiz() {
   const [creationMode, setCreationMode] = useState(id ? 'manual' : null);
   const [aiConfig, setAiConfig] = useState({ topic: '', count: 5 });
   const [error, setError] = useState('');
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
   const [quiz, setQuiz] = useState({
     title: '', description: '', topic: '', questions: [],
     startTime: '', endTime: '', duration: 30,
@@ -115,12 +116,68 @@ export default function CreateQuiz() {
         department: currentUser.department,
       };
       await api.quizzes.save(finalQuiz);
-      navigate('/');
+      setShowSuccessAnimation(true);
+      setTimeout(() => {
+        navigate('/');
+      }, 3000);
     } catch (err) {
       setError(err.message);
       setTimeout(() => setError(''), 3000);
     }
   };
+
+  if (showSuccessAnimation) {
+    return (
+      <div className="fixed inset-0 bg-gradient-to-br from-[#2059a1] via-[#153f75] to-[#ecbf21]/50 flex flex-col items-center justify-center z-[999] overflow-hidden animate-fade-in">
+        {/* Confetti Elements */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[...Array(60)].map((_, i) => {
+            const randomX = Math.random() * 100;
+            const randomSize = Math.random() * 8 + 6;
+            const randomDelay = Math.random() * 2;
+            const randomDuration = Math.random() * 2.5 + 2;
+            const randomColorClass = [
+              'bg-red-500', 'bg-yellow-400', 'bg-blue-500', 'bg-green-500', 'bg-pink-500', 'bg-purple-500', 'bg-orange-500'
+            ][Math.floor(Math.random() * 7)];
+            
+            return (
+              <div
+                key={i}
+                className={`absolute rounded-full opacity-80 ${randomColorClass}`}
+                style={{
+                  width: `${randomSize}px`,
+                  height: `${randomSize}px`,
+                  left: `${randomX}%`,
+                  top: `-10px`,
+                  animation: `fallAndRotate ${randomDuration}s linear ${randomDelay}s infinite`
+                }}
+              />
+            );
+          })}
+        </div>
+
+        {/* Animated Card */}
+        <div className="bg-white/95 backdrop-blur-md rounded-3xl p-10 max-w-md w-full mx-4 shadow-2xl text-center space-y-6 animate-scale-in border border-yellow-400/30">
+          <div className="relative flex justify-center">
+            {/* Outer spinning ring */}
+            <div className="w-24 h-24 rounded-full border-4 border-dashed border-[#ecbf21] animate-spin [animation-duration:8s] flex items-center justify-center" />
+            {/* Inner pulsing checkmark circle */}
+            <div className="absolute inset-0 m-auto w-16 h-16 rounded-full bg-green-500 flex items-center justify-center shadow-lg shadow-green-500/30 animate-pulse">
+              <svg className="w-8 h-8 text-white stroke-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-3xl font-black text-slate-900 tracking-tight animate-pulse">Success!</h2>
+            <p className="text-[#2059a1] font-bold text-lg">Quiz Created Successfully</p>
+            <p className="text-slate-400 text-sm">Redirecting you to the dashboard...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!creationMode && !id) {
     return (

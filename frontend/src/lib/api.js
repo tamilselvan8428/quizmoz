@@ -138,4 +138,26 @@ export const api = {
       return res.json();
     },
   },
+  studyMaterials: {
+    getAll: async (department) => {
+      const url = department ? `${API_URL}/study-materials?department=${department}` : `${API_URL}/study-materials`;
+      const res = await fetch(url, { headers: getHeaders() });
+      return res.json();
+    },
+    save: async (material) => {
+      const res = await fetch(`${API_URL}/study-materials`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(material),
+      });
+      return res.json();
+    },
+    delete: async (id) => {
+      const res = await fetch(`${API_URL}/study-materials/${id}`, {
+        method: 'DELETE',
+        headers: getHeaders(),
+      });
+      return res.json();
+    },
+  },
 };

@@ -33,6 +33,60 @@ export const aiService = {
     return JSON.parse(response.text || "[]");
   },
 
+  generateQuizFromMaterials: async (materials, count = 5) => {
+    try {
+      const contents = [];
+      
+      materials.forEach(mat => {
+        if (mat.fileContent) {
+          const parts = mat.fileContent.split(',');
+          const header = parts[0];
+          const base64Data = parts[1];
+          const mimeType = header.match(/data:(.*?);/)[1];
+          contents.push({
+            inlineData: {
+              data: base64Data,
+              mimeType: mimeType
+            }
+          });
+        }
+      });
+
+      contents.push(
+        `Generate a quiz with ${count} multiple choice questions directly based on the provided study material(s). Return only a JSON array of objects with fields: text (string), options (array of 4 strings), and correctAnswer (number, 0-3).`
+      );
+
+      const response = await ai.models.generateContent({
+        model: "gemini-3-flash-preview",
+        contents: contents,
+        config: {
+          thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                text: { type: Type.STRING },
+                options: {
+                  type: Type.ARRAY,
+                  items: { type: Type.STRING }
+                },
+                correctAnswer: { type: Type.NUMBER }
+              },
+              required: ["text", "options", "correctAnswer"]
+            }
+          }
+        }
+      });
+
+      return JSON.parse(response.text || "[]");
+    } catch (err) {
+      console.error("Failed to generate quiz from materials:", err);
+      throw err;
+    }
+  },
+
   getLearningContentStream: async (topic, onChunk) => {
     const response = await ai.models.generateContentStream({
       model: "gemini-3-flash-preview",

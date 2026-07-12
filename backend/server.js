@@ -8,6 +8,7 @@ import { User } from "./models/User.js";
 import { Quiz } from "./models/Quiz.js";
 import { Result } from "./models/Result.js";
 import { Learning } from "./models/Learning.js";
+import { StudyMaterial } from "./models/StudyMaterial.js";
 
 dotenv.config();
 dotenv.config({ path: "../.env" });
@@ -263,6 +264,54 @@ async function startServer() {
     try {
       await Learning.findByIdAndDelete(req.params.id);
       res.json({ message: "Session deleted" });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  // Study Material Routes
+  app.get("/api/study-materials", authenticate, async (req, res) => {
+    try {
+      const { department } = req.query;
+      const filter = {};
+      if (department) filter.department = department;
+      const materials = await StudyMaterial.find(filter).sort({ createdAt: -1 });
+      res.json(materials);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
+  app.post("/api/study-materials", authenticate, async (req, res) => {
+    try {
+      if (req.user.role !== 'STAFF' && req.user.role !== 'ADMIN') {
+        return res.status(403).json({ error: "Forbidden: Only Staff or Admin can upload study materials" });
+      }
+      const materialData = {
+        ...req.body,
+        uploadedBy: req.user.id,
+        uploaderName: req.user.name,
+      };
+      const material = new StudyMaterial(materialData);
+      await material.save();
+      res.status(201).json(material);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  });
+
+  app.delete("/api/study-materials/:id", authenticate, async (req, res) => {
+    try {
+      const material = await StudyMaterial.findById(req.params.id);
+      if (!material) return res.status(404).json({ error: "Material not found" });
+      
+      // Allow deletion if admin or the staff member who uploaded it
+      if (req.user.role !== 'ADMIN' && material.uploadedBy.toString() !== req.user.id) {
+        return res.status(403).json({ error: "Forbidden: You are not authorized to delete this material" });
+      }
+
+      await StudyMaterial.findByIdAndDelete(req.params.id);
+      res.json({ message: "Study material deleted successfully" });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
