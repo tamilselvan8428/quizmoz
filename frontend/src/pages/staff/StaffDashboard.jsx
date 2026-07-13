@@ -34,6 +34,11 @@ export default function StaffDashboard() {
     topic: '',
     description: '',
   });
+  const [materialVisibility, setMaterialVisibility] = useState('all');
+  const [materialVisibleTo, setMaterialVisibleTo] = useState([]);
+  const [visSearch, setVisSearch] = useState('');
+  const [visDept, setVisDept] = useState('');
+  const [visSec, setVisSec] = useState('');
   const navigate = useNavigate();
 
   const handleFileChange = (e) => {
@@ -97,7 +102,9 @@ export default function StaffDashboard() {
           fileType: file.fileType || 'application/octet-stream',
           fileSize: file.fileSize,
           folderId,
-          folderName
+          folderName,
+          visibility: materialVisibility,
+          visibleTo: materialVisibility === 'selected' ? materialVisibleTo : []
         };
         return api.studyMaterials.save(payload);
       });
@@ -120,6 +127,11 @@ export default function StaffDashboard() {
         description: '',
       });
       setSelectedFiles([]);
+      setMaterialVisibility('all');
+      setMaterialVisibleTo([]);
+      setVisSearch('');
+      setVisDept('');
+      setVisSec('');
       setSuccess('Study materials uploaded successfully');
       setTimeout(() => setSuccess(''), 3000);
     } catch (err) {
@@ -1015,6 +1027,11 @@ export default function StaffDashboard() {
                   fileType: '',
                   fileSize: 0
                 });
+                setMaterialVisibility('all');
+                setMaterialVisibleTo([]);
+                setVisSearch('');
+                setVisDept('');
+                setVisSec('');
                 setError('');
               }}
               className="absolute top-6 right-6 p-1.5 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors z-10"
@@ -1060,6 +1077,169 @@ export default function StaffDashboard() {
                     rows="3"
                     className="w-full px-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:ring-2 focus:ring-[#7c3aed] text-white outline-none resize-none font-medium placeholder-slate-500 transition-all"
                   />
+                </div>
+
+                <div className="border-t border-slate-800/60 pt-4 space-y-3">
+                  <label className="block text-xs font-bold text-slate-400 uppercase">Visibility Settings</label>
+                  <div className="flex gap-3">
+                    <label className="flex items-center gap-2 cursor-pointer bg-slate-950 px-3.5 py-2.5 rounded-xl border border-slate-800 flex-1 hover:border-slate-750 transition-all">
+                      <input
+                        type="radio"
+                        name="materialVisibility"
+                        value="all"
+                        checked={materialVisibility !== 'selected'}
+                        onChange={() => {
+                          setMaterialVisibility('all');
+                          setMaterialVisibleTo([]);
+                        }}
+                        className="accent-[#7c3aed]"
+                      />
+                      <span className="text-xs font-semibold text-slate-350">Visible to All</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer bg-slate-950 px-3.5 py-2.5 rounded-xl border border-slate-800 flex-1 hover:border-slate-750 transition-all">
+                      <input
+                        type="radio"
+                        name="materialVisibility"
+                        value="selected"
+                        checked={materialVisibility === 'selected'}
+                        onChange={() => setMaterialVisibility('selected')}
+                        className="accent-[#7c3aed]"
+                      />
+                      <span className="text-xs font-semibold text-slate-350">Visible to Selected</span>
+                    </label>
+                  </div>
+
+                  {materialVisibility === 'selected' && (
+                    <div className="bg-slate-950/60 border border-slate-850 p-4 rounded-2xl space-y-3 animate-scale-in">
+                      {/* Search & Filters */}
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <div>
+                          <label className="block text-[9px] font-bold text-slate-550 uppercase mb-0.5">Search</label>
+                          <input
+                            type="text"
+                            placeholder="Name / Roll No"
+                            className="w-full px-2 py-1.5 bg-slate-950 border border-slate-800 rounded-lg focus:ring-1 focus:ring-[#7c3aed] text-[11px] text-white outline-none font-medium placeholder-slate-655"
+                            value={visSearch}
+                            onChange={e => setVisSearch(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[9px] font-bold text-slate-550 uppercase mb-0.5">Dept</label>
+                          <input
+                            type="text"
+                            placeholder="e.g. CSE"
+                            className="w-full px-2 py-1.5 bg-slate-950 border border-slate-800 rounded-lg focus:ring-1 focus:ring-[#7c3aed] text-[11px] text-white outline-none font-medium placeholder-slate-655"
+                            value={visDept}
+                            onChange={e => setVisDept(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[9px] font-bold text-slate-550 uppercase mb-0.5">Sec</label>
+                          <input
+                            type="text"
+                            placeholder="e.g. A"
+                            className="w-full px-2 py-1.5 bg-slate-950 border border-slate-800 rounded-lg focus:ring-1 focus:ring-[#7c3aed] text-[11px] text-white outline-none font-medium placeholder-slate-655"
+                            value={visSec}
+                            onChange={e => setVisSec(e.target.value)}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Checkbox List */}
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between items-center bg-slate-950 p-2 rounded-lg border border-slate-850">
+                          <span className="text-[10px] text-slate-450 font-semibold">
+                            {(() => {
+                              const filtered = students.filter(s => {
+                                const matchesQuery = s.name.toLowerCase().includes(visSearch.toLowerCase()) || s.rollNo.toLowerCase().includes(visSearch.toLowerCase());
+                                const matchesDept = !visDept || s.department?.toLowerCase().includes(visDept.toLowerCase());
+                                const matchesSec = !visSec || s.section?.toLowerCase().includes(visSec.toLowerCase());
+                                return matchesQuery && matchesDept && matchesSec;
+                              });
+                              return filtered.length;
+                            })()} students ({materialVisibleTo.length} selected)
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const filtered = students.filter(s => {
+                                const matchesQuery = s.name.toLowerCase().includes(visSearch.toLowerCase()) || s.rollNo.toLowerCase().includes(visSearch.toLowerCase());
+                                const matchesDept = !visDept || s.department?.toLowerCase().includes(visDept.toLowerCase());
+                                const matchesSec = !visSec || s.section?.toLowerCase().includes(visSec.toLowerCase());
+                                return matchesQuery && matchesDept && matchesSec;
+                              });
+                              const filteredIds = filtered.map(s => s._id);
+                              const allSelected = filteredIds.every(id => materialVisibleTo.includes(id));
+                              if (allSelected) {
+                                setMaterialVisibleTo(materialVisibleTo.filter(id => !filteredIds.includes(id)));
+                              } else {
+                                setMaterialVisibleTo(Array.from(new Set([...materialVisibleTo, ...filteredIds])));
+                              }
+                            }}
+                            className="text-[10px] font-bold text-yellow-400 hover:text-yellow-500 transition-colors"
+                          >
+                            {(() => {
+                              const filtered = students.filter(s => {
+                                const matchesQuery = s.name.toLowerCase().includes(visSearch.toLowerCase()) || s.rollNo.toLowerCase().includes(visSearch.toLowerCase());
+                                const matchesDept = !visDept || s.department?.toLowerCase().includes(visDept.toLowerCase());
+                                const matchesSec = !visSec || s.section?.toLowerCase().includes(visSec.toLowerCase());
+                                return matchesQuery && matchesDept && matchesSec;
+                              });
+                              const filteredIds = filtered.map(s => s._id);
+                              return filteredIds.every(id => materialVisibleTo.includes(id)) ? 'Deselect All Filtered' : 'Select All Filtered';
+                            })()}
+                          </button>
+                        </div>
+
+                        <div className="max-h-40 overflow-y-auto border border-slate-850 rounded-xl bg-slate-950 p-1.5 space-y-0.5 scrollbar-thin">
+                          {students.filter(s => {
+                            const matchesQuery = s.name.toLowerCase().includes(visSearch.toLowerCase()) || s.rollNo.toLowerCase().includes(visSearch.toLowerCase());
+                            const matchesDept = !visDept || s.department?.toLowerCase().includes(visDept.toLowerCase());
+                            const matchesSec = !visSec || s.section?.toLowerCase().includes(visSec.toLowerCase());
+                            return matchesQuery && matchesDept && matchesSec;
+                          }).length === 0 ? (
+                            <p className="text-center py-4 text-[10px] text-slate-500 font-semibold">No students found.</p>
+                          ) : (
+                            students.filter(s => {
+                              const matchesQuery = s.name.toLowerCase().includes(visSearch.toLowerCase()) || s.rollNo.toLowerCase().includes(visSearch.toLowerCase());
+                              const matchesDept = !visDept || s.department?.toLowerCase().includes(visDept.toLowerCase());
+                              const matchesSec = !visSec || s.section?.toLowerCase().includes(visSec.toLowerCase());
+                              return matchesQuery && matchesDept && matchesSec;
+                            }).map(s => {
+                              const isChecked = materialVisibleTo.includes(s._id);
+                              return (
+                                <label key={s._id} className="flex items-center justify-between p-2 rounded-lg hover:bg-slate-900/60 cursor-pointer select-none transition-colors border border-transparent hover:border-slate-855">
+                                  <div className="flex items-center gap-2">
+                                    <input
+                                      type="checkbox"
+                                      checked={isChecked}
+                                      onChange={() => {
+                                        if (isChecked) {
+                                          setMaterialVisibleTo(materialVisibleTo.filter(id => id !== s._id));
+                                        } else {
+                                          setMaterialVisibleTo([...materialVisibleTo, s._id]);
+                                        }
+                                      }}
+                                      className="w-3.5 h-3.5 text-[#7c3aed] focus:ring-[#7c3aed] bg-slate-950 border-slate-800 rounded accent-[#7c3aed]"
+                                    />
+                                    <div>
+                                      <p className="text-[11px] font-bold text-white leading-none">{s.name}</p>
+                                      <p className="text-[9px] text-slate-550 font-mono mt-0.5 leading-none">{s.rollNo}</p>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <span className="text-[9px] bg-slate-850 text-slate-400 border border-slate-800 px-1.5 py-0.5 rounded-full font-bold">
+                                      {s.department} • Sec {s.section || 'N/A'}
+                                    </span>
+                                  </div>
+                                </label>
+                              );
+                            })
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -1117,6 +1297,11 @@ export default function StaffDashboard() {
                       description: '',
                     });
                     setSelectedFiles([]);
+                    setMaterialVisibility('all');
+                    setMaterialVisibleTo([]);
+                    setVisSearch('');
+                    setVisDept('');
+                    setVisSec('');
                     setError('');
                   }}
                   className="flex-1 px-4 py-3 border border-slate-800 text-slate-300 font-semibold rounded-xl hover:bg-slate-850 transition-colors"

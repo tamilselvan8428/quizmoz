@@ -169,7 +169,16 @@ async function startServer() {
   // Quiz Routes
   app.get("/api/quizzes", authenticate, async (req, res) => {
     try {
-      const quizzes = await Quiz.find();
+      let query = {};
+      if (req.user.role === 'STUDENT') {
+        query = {
+          $or: [
+            { visibility: { $ne: 'selected' } },
+            { visibleTo: req.user.id }
+          ]
+        };
+      }
+      const quizzes = await Quiz.find(query);
       res.json(quizzes);
     } catch (err) {
       res.status(500).json({ error: err.message });
@@ -275,8 +284,18 @@ async function startServer() {
   app.get("/api/study-materials", authenticate, async (req, res) => {
     try {
       const { department } = req.query;
-      const filter = {};
+      let filter = {};
       if (department) filter.department = department;
+      
+      if (req.user.role === 'STUDENT') {
+        filter = {
+          ...filter,
+          $or: [
+            { visibility: { $ne: 'selected' } },
+            { visibleTo: req.user.id }
+          ]
+        };
+      }
       const materials = await StudyMaterial.find(filter).sort({ createdAt: -1 });
       res.json(materials);
     } catch (err) {

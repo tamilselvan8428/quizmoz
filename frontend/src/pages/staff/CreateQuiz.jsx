@@ -19,7 +19,13 @@ export default function CreateQuiz() {
   const [quiz, setQuiz] = useState({
     title: '', description: '', topic: '', questions: [],
     startTime: '', endTime: '', duration: 30,
+    visibility: 'all',
+    visibleTo: []
   });
+  const [students, setStudents] = useState([]);
+  const [visSearch, setVisSearch] = useState('');
+  const [visDept, setVisDept] = useState('');
+  const [visSec, setVisSec] = useState('');
 
   const fetchQuiz = async () => {
     try {
@@ -38,6 +44,15 @@ export default function CreateQuiz() {
   };
 
   useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const data = await api.users.getAll();
+        setStudents(data.filter(u => u.role === 'STUDENT'));
+      } catch (err) {
+        console.error("Error loading students:", err);
+      }
+    };
+    fetchStudents();
     if (id) {
       fetchQuiz();
     }
@@ -504,6 +519,178 @@ export default function CreateQuiz() {
               value={quiz.endTime} 
               onChange={e => setQuiz({...quiz, endTime: e.target.value})} 
             />
+          </div>
+
+          <div className="col-span-2 border-t border-slate-800/60 pt-6 mt-4 space-y-4">
+            <h3 className="text-sm font-bold text-white uppercase tracking-wider">Visibility & Access Settings</h3>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2 cursor-pointer bg-slate-950 px-4 py-3 rounded-xl border border-slate-800 flex-1 hover:border-slate-700 transition-all">
+                <input
+                  type="radio"
+                  name="visibility"
+                  value="all"
+                  checked={quiz.visibility !== 'selected'}
+                  onChange={() => setQuiz({ ...quiz, visibility: 'all', visibleTo: [] })}
+                  className="accent-[#7c3aed]"
+                />
+                <span className="text-sm font-semibold text-slate-350">Visible to All Students</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer bg-slate-950 px-4 py-3 rounded-xl border border-slate-800 flex-1 hover:border-slate-700 transition-all">
+                <input
+                  type="radio"
+                  name="visibility"
+                  value="selected"
+                  checked={quiz.visibility === 'selected'}
+                  onChange={() => setQuiz({ ...quiz, visibility: 'selected', visibleTo: quiz.visibleTo || [] })}
+                  className="accent-[#7c3aed]"
+                />
+                <span className="text-sm font-semibold text-slate-350">Visible to Selected Students</span>
+              </label>
+            </div>
+
+            {quiz.visibility === 'selected' && (
+              <div className="bg-slate-950/50 border border-slate-800/60 p-6 rounded-2xl space-y-4 animate-scale-in">
+                {/* Search & Filters */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="space-y-1">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase">Search Name / Roll No</label>
+                    <input
+                      type="text"
+                      placeholder="Search..."
+                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg focus:ring-1 focus:ring-[#7c3aed] text-xs text-white outline-none font-medium placeholder-slate-655"
+                      value={visSearch}
+                      onChange={e => setVisSearch(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase">Department</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. CSE"
+                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg focus:ring-1 focus:ring-[#7c3aed] text-xs text-white outline-none font-medium placeholder-slate-655"
+                      value={visDept}
+                      onChange={e => setVisDept(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase">Section</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. A"
+                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 rounded-lg focus:ring-1 focus:ring-[#7c3aed] text-xs text-white outline-none font-medium placeholder-slate-655"
+                      value={visSec}
+                      onChange={e => setVisSec(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                {/* Students list */}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center bg-slate-950 p-3 rounded-xl border border-slate-850">
+                    <span className="text-xs text-slate-400 font-semibold">
+                      Showing {(() => {
+                        const filtered = students.filter(s => {
+                          const matchesQuery = s.name.toLowerCase().includes(visSearch.toLowerCase()) || s.rollNo.toLowerCase().includes(visSearch.toLowerCase());
+                          const matchesDept = !visDept || s.department?.toLowerCase().includes(visDept.toLowerCase());
+                          const matchesSec = !visSec || s.section?.toLowerCase().includes(visSec.toLowerCase());
+                          return matchesQuery && matchesDept && matchesSec;
+                        });
+                        return filtered.length;
+                      })()} students ({quiz.visibleTo?.length || 0} selected)
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const filtered = students.filter(s => {
+                          const matchesQuery = s.name.toLowerCase().includes(visSearch.toLowerCase()) || s.rollNo.toLowerCase().includes(visSearch.toLowerCase());
+                          const matchesDept = !visDept || s.department?.toLowerCase().includes(visDept.toLowerCase());
+                          const matchesSec = !visSec || s.section?.toLowerCase().includes(visSec.toLowerCase());
+                          return matchesQuery && matchesDept && matchesSec;
+                        });
+                        const filteredIds = filtered.map(s => s._id);
+                        const allSelected = filteredIds.every(id => quiz.visibleTo?.includes(id));
+                        if (allSelected) {
+                          // deselect all filtered
+                          setQuiz({
+                            ...quiz,
+                            visibleTo: quiz.visibleTo.filter(id => !filteredIds.includes(id))
+                          });
+                        } else {
+                          // select all filtered (union)
+                          const union = Array.from(new Set([...(quiz.visibleTo || []), ...filteredIds]));
+                          setQuiz({ ...quiz, visibleTo: union });
+                        }
+                      }}
+                      className="text-xs font-bold text-yellow-400 hover:text-yellow-500 transition-colors"
+                    >
+                      {(() => {
+                        const filtered = students.filter(s => {
+                          const matchesQuery = s.name.toLowerCase().includes(visSearch.toLowerCase()) || s.rollNo.toLowerCase().includes(visSearch.toLowerCase());
+                          const matchesDept = !visDept || s.department?.toLowerCase().includes(visDept.toLowerCase());
+                          const matchesSec = !visSec || s.section?.toLowerCase().includes(visSec.toLowerCase());
+                          return matchesQuery && matchesDept && matchesSec;
+                        });
+                        const filteredIds = filtered.map(s => s._id);
+                        return filteredIds.every(id => quiz.visibleTo?.includes(id)) ? 'Deselect All Filtered' : 'Select All Filtered';
+                      })()}
+                    </button>
+                  </div>
+
+                  <div className="max-h-60 overflow-y-auto border border-slate-850 rounded-2xl bg-slate-950 p-2 space-y-1 scrollbar-thin">
+                    {students.filter(s => {
+                      const matchesQuery = s.name.toLowerCase().includes(visSearch.toLowerCase()) || s.rollNo.toLowerCase().includes(visSearch.toLowerCase());
+                      const matchesDept = !visDept || s.department?.toLowerCase().includes(visDept.toLowerCase());
+                      const matchesSec = !visSec || s.section?.toLowerCase().includes(visSec.toLowerCase());
+                      return matchesQuery && matchesDept && matchesSec;
+                    }).length === 0 ? (
+                      <p className="text-center py-6 text-xs text-slate-500 font-semibold">No matching students found.</p>
+                    ) : (
+                      students.filter(s => {
+                        const matchesQuery = s.name.toLowerCase().includes(visSearch.toLowerCase()) || s.rollNo.toLowerCase().includes(visSearch.toLowerCase());
+                        const matchesDept = !visDept || s.department?.toLowerCase().includes(visDept.toLowerCase());
+                        const matchesSec = !visSec || s.section?.toLowerCase().includes(visSec.toLowerCase());
+                        return matchesQuery && matchesDept && matchesSec;
+                      }).map(s => {
+                        const isChecked = quiz.visibleTo?.includes(s._id);
+                        return (
+                          <label key={s._id} className="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-900/60 cursor-pointer select-none transition-colors border border-transparent hover:border-slate-850">
+                            <div className="flex items-center gap-3">
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => {
+                                  if (isChecked) {
+                                    setQuiz({
+                                      ...quiz,
+                                      visibleTo: quiz.visibleTo.filter(id => id !== s._id)
+                                    });
+                                  } else {
+                                    setQuiz({
+                                      ...quiz,
+                                      visibleTo: [...(quiz.visibleTo || []), s._id]
+                                    });
+                                  }
+                                }}
+                                className="w-4 h-4 text-[#7c3aed] focus:ring-[#7c3aed] bg-slate-950 border-slate-800 rounded accent-[#7c3aed]"
+                              />
+                              <div>
+                                <p className="text-xs font-bold text-white">{s.name}</p>
+                                <p className="text-[10px] text-slate-500 font-mono mt-0.5">{s.rollNo}</p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <span className="text-[10px] bg-slate-850 text-slate-400 border border-slate-800 px-2 py-0.5 rounded-full font-bold">
+                                {s.department} • Sec {s.section || 'N/A'}
+                              </span>
+                            </div>
+                          </label>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

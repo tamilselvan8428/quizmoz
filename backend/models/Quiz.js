@@ -18,6 +18,8 @@ const quizSchema = new mongoose.Schema({
   duration: { type: Number, required: true }, // in minutes
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   department: { type: String },
+  visibility: { type: String, enum: ['all', 'selected'], default: 'all' },
+  visibleTo: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, { timestamps: true });
 
 export const Quiz = mongoose.model('Quiz', quizSchema);

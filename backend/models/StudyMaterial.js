@@ -13,6 +13,8 @@ const studyMaterialSchema = new mongoose.Schema({
   department: { type: String },
   folderName: { type: String },
   folderId: { type: String },
+  visibility: { type: String, enum: ['all', 'selected'], default: 'all' },
+  visibleTo: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 }, { timestamps: true });
 
 export const StudyMaterial = mongoose.model('StudyMaterial', studyMaterialSchema);
