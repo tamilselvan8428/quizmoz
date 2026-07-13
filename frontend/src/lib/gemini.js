@@ -143,18 +143,6 @@ export const aiService = {
     }
   },
 
-  generateQuestionImage: async (questionText) => {
-    try {
-      const prompt = `A clean, professional, high-quality educational vector illustration representing the concept: "${questionText}". Simple style, suitable for a school or college quiz question, no text inside the image, clean dark background.`;
-      
-      const base64Image = await api.ai.generateImage(prompt);
-      return base64Image;
-    } catch (err) {
-      console.error("Failed to generate question image:", err);
-      return null;
-    }
-  },
-
   getLearningContentStream: async (topic, onChunk) => {
     const response = await ai.models.generateContentStream({
       model: "gemini-3-flash-preview",

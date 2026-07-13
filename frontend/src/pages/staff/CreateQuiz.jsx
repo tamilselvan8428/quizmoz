@@ -13,7 +13,6 @@ export default function CreateQuiz() {
   const [aiSourceType, setAiSourceType] = useState('topic'); // 'topic' or 'doc'
   const [uploadedFile, setUploadedFile] = useState(null);
   const [pastedText, setPastedText] = useState('');
-  const [generateImages, setGenerateImages] = useState(false);
   const [aiStatusMessage, setAiStatusMessage] = useState('');
   const [error, setError] = useState('');
   const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
@@ -133,20 +132,6 @@ export default function CreateQuiz() {
       }
 
       let formatted = aiQuestions.map((q) => ({ id: crypto.randomUUID(), ...q }));
-
-      if (generateImages && formatted.length > 0) {
-        setAiStatusMessage('Generating illustrative AI images...');
-        const imagePromises = formatted.map(async (q) => {
-          try {
-            const imgBase64 = await aiService.generateQuestionImage(q.text);
-            return { ...q, image: imgBase64 || undefined };
-          } catch (e) {
-            console.error("Failed to generate image for question:", q.text, e);
-            return q;
-          }
-        });
-        formatted = await Promise.all(imagePromises);
-      }
       
       const quizTitle = aiConfig.topic 
         ? `Quiz on ${aiConfig.topic}` 
@@ -412,19 +397,6 @@ export default function CreateQuiz() {
                 value={aiConfig.count} 
                 onChange={e => setAiConfig({...aiConfig, count: parseInt(e.target.value) || 1})} 
               />
-            </div>
-
-            <div className="flex items-center gap-3 py-2 bg-slate-950/40 px-4 rounded-xl border border-slate-800/60">
-              <input
-                type="checkbox"
-                id="generateImages"
-                checked={generateImages}
-                onChange={(e) => setGenerateImages(e.target.checked)}
-                className="w-4.5 h-4.5 text-[#7c3aed] focus:ring-[#7c3aed] bg-slate-950 border-slate-800 rounded accent-[#7c3aed] cursor-pointer"
-              />
-              <label htmlFor="generateImages" className="text-sm font-semibold text-slate-350 cursor-pointer select-none flex items-center gap-1.5">
-                Generate illustrative AI images for questions <span className="text-[10px] bg-[#7c3aed]/10 text-[#a78bfa] border border-[#7c3aed]/20 px-2 py-0.5 rounded-full font-bold uppercase">Imagen 3</span>
-              </label>
             </div>
 
             <button 

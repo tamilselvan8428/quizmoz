@@ -160,16 +160,4 @@ export const api = {
       return res.json();
     },
   },
-  ai: {
-    generateImage: async (prompt) => {
-      const res = await fetch(`${API_URL}/ai/generate-image`, {
-        method: 'POST',
-        headers: getHeaders(),
-        body: JSON.stringify({ prompt }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to generate image');
-      return data.image;
-    }
-  },
 };

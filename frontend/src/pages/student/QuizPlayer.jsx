@@ -18,6 +18,8 @@ export default function QuizPlayer({ user }) {
   const [violations, setViolations] = useState(0);
   const [showWarning, setShowWarning] = useState(false);
   const [wasTerminated, setWasTerminated] = useState(false);
+  const [showSubmitConfirm, setShowSubmitConfirm] = useState(false);
+  const [showSuccessAnimation, setShowSuccessAnimation] = useState(false);
   const lastViolationTime = useRef(0);
   const [error, setError] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
@@ -177,6 +179,14 @@ export default function QuizPlayer({ user }) {
       setError('Failed to submit quiz: ' + err.message);
       setTimeout(() => setError(''), 3000);
     }
+  };
+
+  const handlePerformSubmit = async () => {
+    setShowSuccessAnimation(true);
+    await handleSubmit(false);
+    setTimeout(() => {
+      setShowSuccessAnimation(false);
+    }, 2200);
   };
 
   if (!quiz) return null;
@@ -485,7 +495,7 @@ export default function QuizPlayer({ user }) {
           )}
         </div>
       ) : (        <div className="fixed inset-0 bg-slate-950 flex flex-col p-4 md:p-8 overflow-y-auto">
-          <div className="max-w-4xl w-full mx-auto flex flex-col h-full justify-between">
+          <div className="w-full flex flex-col h-full justify-between">
             <div className="flex items-center justify-between mb-8 bg-slate-900 p-4 rounded-2xl shadow-xl border border-slate-800">
               <div>
                 <h2 className="text-xl font-bold text-white">{quiz.title}</h2>
@@ -501,73 +511,111 @@ export default function QuizPlayer({ user }) {
               </div>
             </div>
 
-            <div className="flex-1 bg-slate-900 rounded-3xl shadow-xl border border-slate-800 p-6 md:p-10 space-y-8">
-              {currentQuestion.image && (
-                <img src={currentQuestion.image} alt="Question" className="max-h-64 mx-auto rounded-xl object-contain mb-6 border border-slate-850 bg-slate-950 p-2" />
-              )}
-              <h3 className="text-xl md:text-2xl font-bold text-white leading-relaxed">
-                {currentQuestion.text}
-              </h3>
+            <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-6 overflow-hidden min-h-0">
+              {/* Question details card */}
+              <div className="md:col-span-3 bg-slate-900 rounded-3xl shadow-xl border border-slate-800 p-6 md:p-10 space-y-6 flex flex-col justify-between overflow-y-auto">
+                <div className="space-y-6">
+                  {currentQuestion.image && (
+                    <img src={currentQuestion.image} alt="Question" className="max-h-64 mx-auto rounded-xl object-contain mb-6 border border-slate-850 bg-slate-950 p-2" />
+                  )}
+                  <h3 className="text-xl md:text-2xl font-bold text-white leading-relaxed">
+                    {currentQuestion.text}
+                  </h3>
 
-              <div className="grid grid-cols-1 gap-4">
-                {currentQuestion.options.map((opt, idx) => (
+                  <div className="grid grid-cols-1 gap-4">
+                    {currentQuestion.options.map((opt, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          const newAnswers = [...answers];
+                          newAnswers[currentQuestionIdx] = idx;
+                          setAnswers(newAnswers);
+                        }}
+                        className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center gap-4 ${
+                          answers[currentQuestionIdx] === idx
+                            ? 'border-[#7c3aed] bg-[#7c3aed]/10 text-white font-semibold'
+                            : 'border-slate-800 hover:border-slate-700 text-slate-350 bg-slate-950/50'
+                        }`}
+                      >
+                        <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                          answers[currentQuestionIdx] === idx ? 'border-[#7c3aed] bg-[#7c3aed]' : 'border-slate-600 bg-slate-950'
+                        }`}>
+                          {answers[currentQuestionIdx] === idx && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                        </div>
+                        <span className="text-base">{opt}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="mt-8 flex justify-between items-center pt-6 border-t border-slate-850 shrink-0">
                   <button
-                    key={idx}
-                    onClick={() => {
-                      const newAnswers = [...answers];
-                      newAnswers[currentQuestionIdx] = idx;
-                      setAnswers(newAnswers);
-                    }}
-                    className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center gap-4 ${
-                      answers[currentQuestionIdx] === idx
-                        ? 'border-[#7c3aed] bg-[#7c3aed]/10 text-white'
-                        : 'border-slate-800 hover:border-slate-700 text-slate-350 bg-slate-950/50'
-                    }`}
+                    disabled={currentQuestionIdx === 0}
+                    onClick={() => setCurrentQuestionIdx(i => i - 1)}
+                    className="px-6 py-2.5 rounded-xl font-bold text-slate-400 hover:bg-slate-950 disabled:opacity-30 transition-colors border border-transparent hover:border-slate-800 text-sm"
                   >
-                    <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${
-                      answers[currentQuestionIdx] === idx ? 'border-[#7c3aed] bg-[#7c3aed]' : 'border-slate-600 bg-slate-950'
-                    }`}>
-                      {answers[currentQuestionIdx] === idx && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
-                    </div>
-                    <span className="text-base font-semibold">{opt}</span>
+                    Previous
                   </button>
-                ))}
-              </div>
-            </div>
 
-            <div className="mt-8 flex justify-between items-center pb-8 shrink-0">
-              <button
-                disabled={currentQuestionIdx === 0}
-                onClick={() => setCurrentQuestionIdx(i => i - 1)}
-                className="px-6 py-2.5 rounded-xl font-bold text-slate-400 hover:bg-slate-900 disabled:opacity-30 transition-colors border border-transparent hover:border-slate-800"
-              >
-                Previous
-              </button>
-              
-              <div className="flex gap-2">
-                {quiz.questions.map((_, idx) => (
-                  <div key={idx} className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                    idx === currentQuestionIdx ? 'bg-[#10b981]' :
-                    answers[idx] !== -1 ? 'bg-indigo-700/60' : 'bg-slate-800'
-                  }`} />
-                ))}
+                  {currentQuestionIdx === quiz.questions.length - 1 ? (
+                    <button
+                      onClick={() => setShowSubmitConfirm(true)}
+                      className="px-8 py-3 bg-green-650 text-white rounded-xl font-bold hover:bg-green-755 transition-all shadow-lg shadow-green-600/10 text-sm"
+                    >
+                      Submit Quiz
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setCurrentQuestionIdx(i => i + 1)}
+                      className="px-8 py-3 bg-[#7c3aed] text-white rounded-xl font-bold hover:bg-[#6d28d9] transition-all shadow-lg shadow-[#7c3aed]/10 text-sm"
+                    >
+                      Next Question
+                    </button>
+                  )}
+                </div>
               </div>
 
-              {currentQuestionIdx === quiz.questions.length - 1 ? (
-                <button
-                  onClick={handleSubmit}
-                  className="px-8 py-3 bg-green-600 text-white rounded-xl font-bold hover:bg-green-700 transition-all shadow-lg shadow-green-600/10"
-                >
-                  Submit Quiz
-                </button>
-              ) : (
-                <button
-                  onClick={() => setCurrentQuestionIdx(i => i + 1)}
-                  className="px-8 py-3 bg-[#7c3aed] text-white rounded-xl font-bold hover:bg-[#6d28d9] transition-all shadow-lg shadow-[#7c3aed]/10"
-                >
-                  Next Question
-                </button>
-              )}
+              {/* Navigation Grid (Quiz Question Box) */}
+              <div className="md:col-span-1 bg-slate-900 rounded-3xl shadow-xl border border-slate-800 p-6 flex flex-col justify-between overflow-y-auto space-y-6">
+                <div>
+                  <h3 className="text-sm font-extrabold uppercase tracking-wider text-slate-450 mb-4 flex items-center gap-2">
+                    <span className="w-1.5 h-3.5 bg-[#7c3aed] rounded-full inline-block" />
+                    Question Navigator
+                  </h3>
+                  <div className="grid grid-cols-5 gap-2">
+                    {quiz.questions.map((_, idx) => {
+                      const isAnswered = answers[idx] !== -1;
+                      const isCurrent = idx === currentQuestionIdx;
+                      return (
+                        <button
+                          key={idx}
+                          onClick={() => setCurrentQuestionIdx(idx)}
+                          className={`h-10 w-full text-xs font-bold rounded-xl flex items-center justify-center border transition-all ${
+                            isCurrent ? 'ring-2 ring-[#7c3aed] ring-offset-2 ring-offset-slate-950 scale-105' : ''
+                          } ${
+                            isAnswered
+                              ? 'bg-emerald-950/60 border-emerald-900/50 text-emerald-450 hover:bg-emerald-900/40'
+                              : 'bg-red-950/60 border-red-900/50 text-red-400 hover:bg-red-900/40'
+                          }`}
+                        >
+                          {idx + 1}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="border-t border-slate-850 pt-4 space-y-2.5 text-xs text-slate-500 font-semibold shrink-0">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3.5 h-3.5 rounded-md bg-emerald-950/60 border border-emerald-900/50" />
+                    <span>Answered</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3.5 h-3.5 rounded-md bg-red-950/60 border border-red-900/50" />
+                    <span>Unanswered</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -594,6 +642,89 @@ export default function QuizPlayer({ user }) {
             >
               I Understand, Continue Quiz
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Submit Confirmation Modal */}
+      {showSubmitConfirm && (
+        <div className="fixed inset-0 bg-black/65 backdrop-blur-sm flex items-center justify-center z-[110] p-4 animate-fade-in">
+          <div className="bg-slate-900 border border-slate-800 text-white rounded-3xl p-8 max-w-md w-full space-y-6 shadow-2xl animate-scale-in relative text-left">
+            <h2 className="text-2xl font-black text-white">Submit Quiz?</h2>
+            
+            {(() => {
+              const unansweredCount = answers.filter(a => a === -1).length;
+              if (unansweredCount > 0) {
+                return (
+                  <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+                    <div className="text-sm">
+                      <p className="font-bold">Unanswered Questions!</p>
+                      <p className="text-xs text-red-450/90 mt-1">
+                        You have <strong className="text-white font-extrabold">{unansweredCount}</strong> unanswered questions out of {quiz.questions.length}. Unanswered questions will receive 0 points.
+                      </p>
+                    </div>
+                  </div>
+                );
+              } else {
+                return (
+                  <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-450 p-4 rounded-xl flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
+                    <div className="text-sm">
+                      <p className="font-bold">All Questions Answered!</p>
+                      <p className="text-xs text-emerald-450/90 mt-1">
+                        Great job! You have answered all questions. Are you ready to submit your quiz?
+                      </p>
+                    </div>
+                  </div>
+                );
+              }
+            })()}
+
+            <p className="text-sm text-slate-400 leading-relaxed font-semibold">
+              Once submitted, you will not be able to change your answers. Do you want to proceed?
+            </p>
+
+            <div className="flex gap-4">
+              <button
+                onClick={() => setShowSubmitConfirm(false)}
+                className="flex-1 px-4 py-2.5 border border-slate-800 text-slate-350 font-bold rounded-xl hover:bg-slate-850 transition-colors text-sm"
+              >
+                Go Back
+              </button>
+              <button
+                onClick={async () => {
+                  setShowSubmitConfirm(false);
+                  await handlePerformSubmit();
+                }}
+                className="flex-1 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition-colors text-sm shadow-lg shadow-green-600/15"
+              >
+                Yes, Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Success Animation Overlay */}
+      {showSuccessAnimation && (
+        <div className="fixed inset-0 bg-slate-950 flex flex-col items-center justify-center z-[120] animate-fade-in">
+          <div className="text-center space-y-6">
+            <div className="relative flex items-center justify-center">
+              {/* Outer glowing pulsing ring */}
+              <div className="absolute w-24 h-24 bg-emerald-500/10 border-2 border-emerald-500/20 rounded-full animate-ping duration-1000" />
+              <div className="absolute w-28 h-28 bg-emerald-500/5 border border-emerald-500/10 rounded-full animate-ping duration-1500 delay-300" />
+              
+              {/* Main Checkmark circle */}
+              <div className="w-20 h-20 bg-emerald-950 border border-emerald-500/30 text-emerald-450 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.2)] animate-scale-in">
+                <CheckCircle2 className="w-10 h-10 animate-bounce" />
+              </div>
+            </div>
+            
+            <div className="space-y-2 animate-fade-in-up delay-200">
+              <h2 className="text-2xl font-black text-white">Quiz Submitted Successfully!</h2>
+              <p className="text-slate-400 text-sm max-w-xs mx-auto">Calculating your results and generating your performance breakdown...</p>
+            </div>
           </div>
         </div>
       )}
