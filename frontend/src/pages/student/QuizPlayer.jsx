@@ -26,6 +26,18 @@ export default function QuizPlayer({ user }) {
   const [aiAnalysis, setAiAnalysis] = useState('');
   const [analysisSaved, setAnalysisSaved] = useState(false);
   const containerRef = useRef(null);
+  const isRestoredRef = useRef(false);
+  const storageKey = `quizmoz_quiz_progress_${user?.id || user?._id || 'guest'}_${id}`;
+
+  const getSavedProgress = () => {
+    try {
+      const saved = localStorage.getItem(storageKey);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error('Error loading saved progress:', e);
+    }
+    return null;
+  };
 
   const handleAiAnalysis = async () => {
     if (!quiz || !answers || aiLoading) return;
@@ -70,9 +82,21 @@ export default function QuizPlayer({ user }) {
         navigate('/');
         return;
       }
+
+      const saved = getSavedProgress();
+      if (saved) {
+        setAnswers(saved.answers || new Array(q.questions.length).fill(-1));
+        setCurrentQuestionIdx(saved.currentQuestionIdx || 0);
+        setViolations(saved.violations || 0);
+        setTimeLeft(typeof saved.timeLeft === 'number' ? saved.timeLeft : q.duration * 60);
+        if (saved.wasTerminated) setWasTerminated(true);
+      } else {
+        setAnswers(new Array(q.questions.length).fill(-1));
+        setTimeLeft(q.duration * 60);
+      }
+
       setQuiz(q);
-      setAnswers(new Array(q.questions.length).fill(-1));
-      setTimeLeft(q.duration * 60);
+      isRestoredRef.current = true;
     } catch (err) {
       console.error(err);
       navigate('/');
@@ -80,12 +104,30 @@ export default function QuizPlayer({ user }) {
   };
 
   useEffect(() => {
+    isRestoredRef.current = false;
     fetchQuiz();
   }, [id]);
 
   useEffect(() => {
+    if (isRestoredRef.current && quiz && !isFinished) {
+      const stateToSave = {
+        answers,
+        currentQuestionIdx,
+        violations,
+        timeLeft,
+        wasTerminated
+      };
+      localStorage.setItem(storageKey, JSON.stringify(stateToSave));
+    }
+  }, [answers, currentQuestionIdx, violations, timeLeft, wasTerminated, quiz, isFinished]);
+
+  useEffect(() => {
     const handleFullScreenChange = () => {
-      setIsFullScreen(!!document.fullscreenElement);
+      const currentlyFullScreen = !!document.fullscreenElement;
+      setIsFullScreen(currentlyFullScreen);
+      if (!currentlyFullScreen && isFullScreen && !isFinished) {
+        handleViolation();
+      }
     };
 
     const handleViolation = () => {
@@ -174,6 +216,7 @@ export default function QuizPlayer({ user }) {
     try {
       await api.results.save(result);
       setIsFinished(true);
+      localStorage.removeItem(storageKey);
       if (document.fullscreenElement) document.exitFullscreen();
     } catch (err) {
       setError('Failed to submit quiz: ' + err.message);
